@@ -9,15 +9,15 @@ function createPrismaClient() {
   const isPostgres = dbUrl?.startsWith("postgresql");
 
   if (isPostgres) {
-    // Vercel / Production — PostgreSQL
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { PrismaPg } = require("@prisma/adapter-pg");
-    const adapter = new PrismaPg({ connectionString: dbUrl });
+    // Vercel / Production — PostgreSQL via Neon
+    const { PrismaNeon } = require("@prisma/adapter-neon");
+    const { Pool } = require("@neondatabase/serverless");
+    const pool = new Pool({ connectionString: dbUrl });
+    const adapter = new PrismaNeon(pool);
     return new PrismaClient({ adapter });
   }
 
   // Local development — SQLite
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
   const url = dbUrl || "file:./prisma/can-desk.db";
   const adapter = new PrismaBetterSqlite3({ url });
