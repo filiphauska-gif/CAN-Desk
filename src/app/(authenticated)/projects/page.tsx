@@ -52,7 +52,7 @@ export default async function ProjectsPage({
           <Link
             key={project.id}
             href={`/projects/${project.id}`}
-            className="bg-white rounded-xl border border-[#E7E5E4] p-5 hover:border-[#6366F1]/30 hover:shadow-sm transition-all block"
+            className="glass rounded-xl p-5 hover:border-[#6366F1]/30 hover:shadow-sm transition-all block"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
@@ -106,7 +106,7 @@ export default async function ProjectsPage({
           </Link>
         ))}
         {projects.length === 0 && (
-          <div className="bg-white rounded-xl border border-[#E7E5E4] p-12 text-center">
+          <div className="glass rounded-xl p-12 text-center">
             <FolderKanban className="w-12 h-12 text-[#D6D3D1] mx-auto mb-3" />
             <p className="text-[#78716C]">Žádné projekty neodpovídají filtrům</p>
           </div>

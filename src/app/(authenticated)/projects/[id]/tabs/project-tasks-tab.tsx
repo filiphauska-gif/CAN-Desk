@@ -124,24 +124,24 @@ export function ProjectTasksTab({
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3"
+          className="glass rounded-xl p-4 space-y-3"
         >
           <input
             name="title"
             required
             placeholder="Název úkolu"
-            className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+            className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
           />
           <textarea
             name="description"
             rows={2}
             placeholder="Zadání / poznámky"
-            className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] resize-none"
+            className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] resize-none"
           />
           <div className="grid grid-cols-3 gap-3">
             <div>
               <label className="block text-xs text-[#78716C] mb-1">Priorita</label>
-              <select name="priority" className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm bg-white">
+              <select name="priority" className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm bg-white">
                 <option value="0">Normální</option>
                 <option value="1">Vysoká</option>
                 <option value="2">Urgentní</option>
@@ -149,18 +149,18 @@ export function ProjectTasksTab({
             </div>
             <div>
               <label className="block text-xs text-[#78716C] mb-1">Deadline</label>
-              <input name="deadline" type="date" className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm" />
+              <input name="deadline" type="date" className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm" />
             </div>
             <div>
               <label className="block text-xs text-[#78716C] mb-1">Limit (hod)</label>
-              <input name="estimatedHours" type="number" step="0.5" className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm" />
+              <input name="estimatedHours" type="number" step="0.5" className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm" />
             </div>
           </div>
           <div>
             <label className="block text-xs text-[#78716C] mb-1">Přiřazení členové teamu</label>
             <div className="flex flex-wrap gap-2">
               {allUsers.map((u) => (
-                <label key={u.id} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E7E5E4] text-sm cursor-pointer hover:bg-[#F5F5F4] transition-colors">
+                <label key={u.id} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/40 text-sm cursor-pointer hover:bg-white/40 transition-colors">
                   <input type="checkbox" name="assigneeIds" value={u.id} className="rounded" />
                   {u.name}
                 </label>
@@ -171,7 +171,7 @@ export function ProjectTasksTab({
             <Button type="button" variant="outline" size="sm" onClick={() => setShowForm(false)}>
               Zrušit
             </Button>
-            <Button type="submit" size="sm" disabled={loading} className="bg-[#6366F1] text-white">
+            <Button type="submit" size="sm" disabled={loading} className="btn-glass-primary text-white">
               {loading ? "..." : "Vytvořit úkol"}
             </Button>
           </div>
@@ -187,7 +187,7 @@ export function ProjectTasksTab({
               key={col.key}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, col.key)}
-              className="bg-[#FAF8F5] rounded-xl border border-[#E7E5E4] p-3 transition-colors"
+              className="bg-white/30 rounded-xl border border-white/40 p-3 transition-colors"
             >
               <div className="flex items-center justify-between mb-2 px-1">
                 <span className="text-xs font-medium text-[#78716C]">{col.label}</span>
@@ -210,7 +210,7 @@ export function ProjectTasksTab({
                       draggable={canEdit}
                       onDragStart={(e) => handleDragStart(e, task.id)}
                       className={cn(
-                        "bg-white rounded-lg border border-[#E7E5E4] p-3 space-y-1.5 cursor-grab active:cursor-grabbing hover:shadow-sm transition-shadow",
+                        "glass rounded-lg p-3 space-y-1.5 cursor-grab active:cursor-grabbing hover:shadow-sm transition-shadow",
                         dragTaskId === task.id && "opacity-50"
                       )}
                     >
@@ -227,7 +227,7 @@ export function ProjectTasksTab({
                       {uniqueUsers.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {uniqueUsers.map((u: any, i: number) => (
-                            <span key={i} className="px-1.5 py-0.5 rounded text-[10px] bg-[#F5F5F4] text-[#78716C]">
+                            <span key={i} className="px-1.5 py-0.5 rounded text-[10px] bg-white/35 text-[#78716C]">
                               {u.name}
                             </span>
                           ))}

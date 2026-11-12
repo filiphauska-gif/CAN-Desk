@@ -51,7 +51,7 @@ export function ProjectDetailTabs({
   return (
     <div>
       {/* Tab bar */}
-      <div className="flex border-b border-[#E7E5E4] overflow-x-auto">
+      <div className="flex border-b border-black/5 overflow-x-auto">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -77,11 +77,11 @@ export function ProjectDetailTabs({
         {activeTab === "prehled" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Next tasks */}
-            <div className="bg-white rounded-xl border border-[#E7E5E4]">
-              <div className="px-5 py-4 border-b border-[#E7E5E4]">
+            <div className="glass rounded-xl">
+              <div className="px-5 py-4 border-b border-black/5">
                 <h3 className="text-sm font-semibold text-[#1C1917]">Nejbližší úkoly</h3>
               </div>
-              <div className="divide-y divide-[#E7E5E4]">
+              <div className="divide-y divide-black/5">
                 {project.tasks
                   .slice(0, 5)
                   .map((task: any) => (
@@ -90,12 +90,12 @@ export function ProjectDetailTabs({
                         className={cn(
                           "w-2 h-2 rounded-full shrink-0",
                           task.status === "DONE"
-                            ? "bg-green-500"
+                            ? "bg-emerald-500"
                             : task.status === "IN_PROGRESS"
                             ? "bg-amber-500"
                             : task.status === "TODO"
-                            ? "bg-blue-500"
-                            : "bg-gray-300"
+                            ? "bg-sky-500"
+                            : "bg-stone-300"
                         )}
                       />
                       <div className="flex-1 min-w-0">
@@ -120,22 +120,22 @@ export function ProjectDetailTabs({
             </div>
 
             {/* Overview stats */}
-            <div className="bg-white rounded-xl border border-[#E7E5E4] p-5">
+            <div className="glass rounded-xl p-5">
               <h3 className="text-sm font-semibold text-[#1C1917] mb-4">Rychlý přehled</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#F5F5F4] rounded-lg p-3">
+                <div className="bg-white/35 rounded-lg p-3">
                   <p className="text-xs text-[#78716C]">Úkolů celkem</p>
                   <p className="text-lg font-semibold text-[#1C1917]">{project.tasks.length}</p>
                 </div>
-                <div className="bg-[#F5F5F4] rounded-lg p-3">
+                <div className="bg-white/35 rounded-lg p-3">
                   <p className="text-xs text-[#78716C]">Odpracováno</p>
                   <p className="text-lg font-semibold text-[#1C1917]">{totalHours}h</p>
                 </div>
-                <div className="bg-[#F5F5F4] rounded-lg p-3">
+                <div className="bg-white/35 rounded-lg p-3">
                   <p className="text-xs text-[#78716C]">Fakturovatelných</p>
                   <p className="text-lg font-semibold text-[#1C1917]">{billableHours}h</p>
                 </div>
-                <div className="bg-[#F5F5F4] rounded-lg p-3">
+                <div className="bg-white/35 rounded-lg p-3">
                   <p className="text-xs text-[#78716C]">Po deadline</p>
                   <p className="text-lg font-semibold text-[#1C1917]">{overdueTasks.length}</p>
                 </div>
@@ -145,11 +145,11 @@ export function ProjectDetailTabs({
                   <p className="text-xs text-[#78716C] mb-1">
                     Vytížení rozpočtu: {Math.round((totalHours / project.budgetHours) * 100)}%
                   </p>
-                  <div className="h-2 bg-[#F5F5F4] rounded-full overflow-hidden">
+                  <div className="h-2 bg-white/35 rounded-full overflow-hidden">
                     <div
                       className={cn(
                         "h-full rounded-full",
-                        (totalHours / project.budgetHours) > 0.8 ? "bg-red-500" : "bg-[#6366F1]"
+                        (totalHours / project.budgetHours) > 0.8 ? "bg-rose-500" : "bg-[#6366F1]"
                       )}
                       style={{
                         width: `${Math.min(100, Math.round((totalHours / project.budgetHours) * 100))}%`,
@@ -161,11 +161,11 @@ export function ProjectDetailTabs({
             </div>
 
             {/* Comments preview */}
-            <div className="lg:col-span-2 bg-white rounded-xl border border-[#E7E5E4]">
-              <div className="px-5 py-4 border-b border-[#E7E5E4]">
+            <div className="lg:col-span-2 glass rounded-xl">
+              <div className="px-5 py-4 border-b border-black/5">
                 <h3 className="text-sm font-semibold text-[#1C1917]">Poslední komentáře</h3>
               </div>
-              <div className="divide-y divide-[#E7E5E4]">
+              <div className="divide-y divide-black/5">
                 {project.comments.slice(0, 3).map((comment: any) => (
                   <div key={comment.id} className="px-5 py-3">
                     <div className="flex items-center gap-2 mb-1">

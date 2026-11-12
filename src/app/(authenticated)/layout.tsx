@@ -11,9 +11,11 @@ export default async function AuthenticatedLayout({
   if (!session?.user) redirect("/login");
 
   return (
-    <div className="min-h-screen bg-[#F5F2EF] flex">
+    <div className="min-h-screen flex">
+      {/* Aurora mesh background — gives the glass something to refract */}
+      <div className="liquid-bg" aria-hidden />
       <Sidebar />
-      <main className="flex-1 lg:ml-0 p-4 lg:p-6 pt-16 lg:pt-6 overflow-auto">
+      <main className="flex-1 min-w-0 p-4 lg:py-6 lg:pr-6 lg:pl-3 pt-16 overflow-auto">
         {children}
       </main>
     </div>

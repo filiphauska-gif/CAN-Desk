@@ -43,7 +43,7 @@ export default async function TasksPage({
           <Link
             href="/tasks?view=mine"
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-              view === "mine" ? "bg-[#6366F1] text-white" : "bg-white border border-[#E7E5E4] text-[#78716C] hover:text-[#1C1917]"
+              view === "mine" ? "btn-glass-primary text-white" : "bg-white border border-white/40 text-[#78716C] hover:text-[#1C1917]"
             }`}
           >
             Moje
@@ -51,7 +51,7 @@ export default async function TasksPage({
           <Link
             href="/tasks?view=all"
             className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-              view === "all" ? "bg-[#6366F1] text-white" : "bg-white border border-[#E7E5E4] text-[#78716C] hover:text-[#1C1917]"
+              view === "all" ? "btn-glass-primary text-white" : "bg-white border border-white/40 text-[#78716C] hover:text-[#1C1917]"
             }`}
           >
             Všechny
@@ -67,8 +67,8 @@ export default async function TasksPage({
             href={`/tasks?view=${view}&status=${key}`}
             className={`px-3 py-1.5 rounded-lg text-xs border transition-colors ${
               params.status === key
-                ? "bg-[#6366F1] text-white border-[#6366F1]"
-                : "bg-white border-[#E7E5E4] text-[#78716C] hover:border-[#6366F1]"
+                ? "btn-glass-primary text-white border-[#6366F1]"
+                : "bg-white border-white/40 text-[#78716C] hover:border-[#6366F1]"
             }`}
           >
             {label} ({statusMap[key] || 0})
@@ -85,13 +85,13 @@ export default async function TasksPage({
       </div>
 
       {/* Tasks list */}
-      <div className="bg-white rounded-xl border border-[#E7E5E4]">
-        <div className="divide-y divide-[#E7E5E4]">
+      <div className="glass rounded-xl">
+        <div className="divide-y divide-black/5">
           {tasks.map((task: any) => (
             <Link
               key={task.id}
               href={`/projects/${task.projectId}?tab=ukoly`}
-              className="flex items-center gap-3 px-5 py-3 hover:bg-[#F5F5F4] transition-colors"
+              className="flex items-center gap-3 px-5 py-3 hover:bg-white/40 transition-colors"
             >
               <TaskStatusBadge status={task.status} />
               <div className="flex-1 min-w-0">
@@ -107,7 +107,7 @@ export default async function TasksPage({
                 <span
                   className={`text-xs shrink-0 ${
                     isBefore(new Date(task.deadline), new Date()) && task.status !== "DONE"
-                      ? "text-red-500 font-medium"
+                      ? "text-rose-500 font-medium"
                       : "text-[#78716C]"
                   }`}
                 >

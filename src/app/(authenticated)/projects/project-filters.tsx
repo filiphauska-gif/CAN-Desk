@@ -29,7 +29,7 @@ export function ProjectFilters({
   const hasFilters = Array.from(searchParams.keys()).length > 0;
 
   return (
-    <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+    <div className="glass rounded-xl p-4">
       <div className="flex flex-wrap items-center gap-3">
         {/* Search */}
         <div className="relative flex-1 min-w-[200px]">
@@ -43,7 +43,7 @@ export function ProjectFilters({
                 setFilter("search", val || null);
               }
             }}
-            className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+            className="w-full pl-9 pr-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
           />
         </div>
 
@@ -51,7 +51,7 @@ export function ProjectFilters({
         <select
           value={searchParams.get("status") || ""}
           onChange={(e) => setFilter("status", e.target.value || null)}
-          className="px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
+          className="px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
         >
           <option value="">Všechny statusy</option>
           {Object.entries(projectStatusLabels).map(([key, label]) => (
@@ -65,7 +65,7 @@ export function ProjectFilters({
         <select
           value={searchParams.get("clientId") || ""}
           onChange={(e) => setFilter("clientId", e.target.value || null)}
-          className="px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
+          className="px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
         >
           <option value="">Všichni klienti</option>
           {clients.map((c) => (

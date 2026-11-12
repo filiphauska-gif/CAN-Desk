@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 
-// Auto-seed on first run if no users exist
+// Auto-seed on first run
 async function autoSeed() {
   try {
     const count = await prisma.user.count();
@@ -12,18 +12,15 @@ async function autoSeed() {
       await prisma.user.createMany({
         data: [
           { email: "admin@canagency.cz", passwordHash: hash, name: "Adam Admin", role: "ADMIN", hourlyRate: 1500 },
-          { email: "finance@canagency.cz", passwordHash: hash, name: "František Finance", role: "FINANCE", hourlyRate: 1200 },
           { email: "account@canagency.cz", passwordHash: hash, name: "Filip Account", role: "ACCOUNT_MANAGER", hourlyRate: 1300 },
-          { email: "pm@canagency.cz", passwordHash: hash, name: "Petra Projektová", role: "PROJECT_MANAGER", hourlyRate: 1100 },
           { email: "kreativec@canagency.cz", passwordHash: hash, name: "Karel Kreativní", role: "KREATIVEC", hourlyRate: 900 },
+          { email: "finance@canagency.cz", passwordHash: hash, name: "František Finance", role: "FINANCE", hourlyRate: 1200 },
           { email: "produkcni@canagency.cz", passwordHash: hash, name: "Petr Produkční", role: "PRODUKCNI", hourlyRate: 800 },
+          { email: "pm@canagency.cz", passwordHash: hash, name: "Petra Projektová", role: "PROJECT_MANAGER", hourlyRate: 1100 },
         ],
       });
-      console.log("✅ Auto-seed: 6 users created");
     }
-  } catch (e) {
-    console.log("Auto-seed skipped (tables might not exist yet):", (e as any)?.message);
-  }
+  } catch (e) {}
 }
 autoSeed();
 
@@ -42,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const password = String(credentials.password);
 
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || !user.active) return null;
+        if (!user) return null;
 
         const isValid = await bcrypt.compare(password, user.passwordHash);
         if (!isValid) return null;

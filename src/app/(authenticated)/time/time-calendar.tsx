@@ -120,12 +120,12 @@ export function TimeCalendar({
 
   function getDayColor(dayData: DayData | undefined): string {
     if (!dayData || dayData.totalHours === 0) return "";
-    if (dayData.vacationHours > 0) return "bg-blue-100 border-blue-300";
-    if (dayData.sickHours > 0) return "bg-red-100 border-red-300";
+    if (dayData.vacationHours > 0) return "bg-sky-100/70 border-sky-300/60";
+    if (dayData.sickHours > 0) return "bg-rose-100/70 border-rose-300/60";
     if (dayData.billableHours === dayData.totalHours)
       return "bg-emerald-50 border-emerald-300";
     if (dayData.billableHours > 0) return "bg-amber-50 border-amber-300";
-    return "bg-gray-50 border-gray-300";
+    return "bg-stone-100/60 border-stone-300/50";
   }
 
   return (
@@ -135,7 +135,7 @@ export function TimeCalendar({
         <div className="flex items-center gap-3">
           <button
             onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-            className="p-1.5 rounded-lg hover:bg-[#F5F5F4] text-[#78716C]"
+            className="p-1.5 rounded-lg hover:bg-white/40 text-[#78716C]"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -144,18 +144,18 @@ export function TimeCalendar({
           </h2>
           <button
             onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-            className="p-1.5 rounded-lg hover:bg-[#F5F5F4] text-[#78716C]"
+            className="p-1.5 rounded-lg hover:bg-white/40 text-[#78716C]"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
           <button
             onClick={() => { setRefreshKey(k => k + 1); setSelectedDay(null); }}
-            className="px-2 py-1 text-xs rounded-md bg-[#F5F5F4] text-[#78716C] hover:bg-[#E7E5E4] transition-colors"
+            className="px-2 py-1 text-xs rounded-md bg-white/35 text-[#78716C] hover:bg-[#E7E5E4] transition-colors"
           >
             Obnovit
           </button>
         </div>
-        <div className="flex bg-[#F5F5F4] rounded-lg p-0.5">
+        <div className="flex bg-white/35 rounded-lg p-0.5">
           <button
             onClick={() => setViewMode("month")}
             className={cn(
@@ -188,15 +188,15 @@ export function TimeCalendar({
           Smíšené
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded bg-blue-100 border border-blue-300" />{" "}
+          <span className="w-3 h-3 rounded bg-sky-100 border border-sky-300" />{" "}
           Dovolená
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded bg-red-100 border border-red-300" />{" "}
+          <span className="w-3 h-3 rounded bg-rose-100 border border-rose-300" />{" "}
           Nemoc
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded bg-gray-50 border border-gray-300" />{" "}
+          <span className="w-3 h-3 rounded bg-stone-50 border border-stone-300" />{" "}
           Režie
         </span>
       </div>
@@ -208,7 +208,7 @@ export function TimeCalendar({
         </span>
         <span className="text-[#78716C]">
           Fakturovatelné:{" "}
-          <strong className="text-green-600">{monthBillableHours.toFixed(1)}h</strong>
+          <strong className="text-emerald-600">{monthBillableHours.toFixed(1)}h</strong>
         </span>
         <span className="text-[#78716C]">
           Nefakturovatelné:{" "}
@@ -220,8 +220,8 @@ export function TimeCalendar({
 
       {/* Calendar Grid */}
       {viewMode === "month" ? (
-        <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
-        <div className="grid grid-cols-7 border-b border-[#E7E5E4]">
+        <div className="glass rounded-xl overflow-hidden">
+        <div className="grid grid-cols-7 border-b border-black/5">
           {["Po", "Út", "St", "Čt", "Pá", "So", "Ne"].map((day) => (
             <div
               key={day}
@@ -244,9 +244,9 @@ export function TimeCalendar({
                 key={i}
                 onClick={() => setSelectedDay(day)}
                 className={cn(
-                  "min-h-[80px] p-1.5 border-b border-r border-[#E7E5E4] text-left transition-colors hover:bg-[#FAF8F5] relative",
+                  "min-h-[80px] p-1.5 border-b border-r border-white/40 text-left transition-colors hover:bg-white/30 relative",
                   !isCurrMonth && "opacity-30",
-                  isWeekend && !dayData && "bg-[#FAF8F5]/50",
+                  isWeekend && !dayData && "bg-white/30/50",
                   isToday(day) && "ring-2 ring-inset ring-[#6366F1]",
                   getDayColor(dayData)
                 )}
@@ -271,12 +271,12 @@ export function TimeCalendar({
                           className={cn(
                             "w-1.5 h-1.5 rounded-full shrink-0",
                             entry.entryType === "VACATION"
-                              ? "bg-blue-500"
+                              ? "bg-sky-500"
                               : entry.entryType === "SICK"
-                              ? "bg-red-500"
+                              ? "bg-rose-500"
                               : entry.billable
                               ? "bg-emerald-500"
-                              : "bg-gray-400"
+                              : "bg-stone-400"
                           )}
                         />
                         <span className="text-[10px] leading-tight text-[#78716C] truncate">

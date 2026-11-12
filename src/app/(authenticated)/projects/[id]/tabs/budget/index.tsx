@@ -94,7 +94,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
   const grossMargin = netRevenue - totalCosts;
   const marginPercent = netRevenue > 0 ? Math.round((grossMargin / netRevenue) * 100) : 0;
 
-  const marginColor = marginPercent >= 30 ? "text-green-600" : marginPercent >= 15 ? "text-amber-600" : marginPercent >= 0 ? "text-red-500" : "text-red-600 font-bold";
+  const marginColor = marginPercent >= 30 ? "text-emerald-600" : marginPercent >= 15 ? "text-amber-600" : marginPercent >= 0 ? "text-rose-500" : "text-rose-600 font-bold";
 
   async function handleAddLine(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -132,9 +132,9 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
 
   function getLineColor(line: BudgetLine) {
     if (viewMode === "client" && line.isInternalOnly) return "hidden";
-    if (line.type === "SKUPINA") return "bg-[#F5F5F4] font-semibold";
+    if (line.type === "SKUPINA") return "bg-white/35 font-semibold";
     if (line.type === "TEXT") return "italic text-[#78716C]";
-    if (line.type === "SLEVA") return "text-red-500";
+    if (line.type === "SLEVA") return "text-rose-500";
     return "";
   }
 
@@ -144,17 +144,17 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           {budget && (
-            <span className="text-xs font-mono text-[#78716C] bg-[#F5F5F4] px-2 py-1 rounded">
+            <span className="text-xs font-mono text-[#78716C] bg-white/35 px-2 py-1 rounded">
               {budget.documentNumber} | v{budget.version}
             </span>
           )}
-          <span className={cn("text-xs px-2 py-1 rounded font-medium", STATUS_LABELS[budget?.status || ""] ? "bg-blue-50 text-blue-700" : "bg-gray-100")}>
+          <span className={cn("text-xs px-2 py-1 rounded font-medium", STATUS_LABELS[budget?.status || ""] ? "badge-indigo" : "badge-stone")}>
             {STATUS_LABELS[budget?.status || ""] || "Nová nabídka"}
           </span>
         </div>
         <div className="flex items-center gap-2">
           {/* View toggle */}
-          <div className="flex bg-[#F5F5F4] rounded-lg p-0.5">
+          <div className="flex bg-white/35 rounded-lg p-0.5">
             <button onClick={() => setViewMode("internal")} className={cn("px-3 py-1.5 rounded-md text-xs font-medium transition-colors", viewMode === "internal" ? "bg-white text-[#1C1917] shadow-sm" : "text-[#78716C]")}>
               <Eye className="w-3 h-3 inline mr-1" />Interní
             </button>
@@ -163,7 +163,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
             </button>
           </div>
           {budget && (
-            <button onClick={() => window.open(`/api/budget-print/${projectId}`, "_blank")} className="px-3 py-1.5 rounded-lg border border-[#E7E5E4] text-xs text-[#78716C] hover:bg-[#F5F5F4]">
+            <button onClick={() => window.open(`/api/budget-print/${projectId}`, "_blank")} className="px-3 py-1.5 rounded-lg border border-white/40 text-xs text-[#78716C] hover:bg-white/40">
               <FileDown className="w-3 h-3 inline mr-1" />PDF
             </button>
           )}
@@ -172,7 +172,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
 
       {/* No budget yet */}
       {!budget && (
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-12 text-center">
+        <div className="glass rounded-xl p-12 text-center">
           <p className="text-[#78716C] mb-3">Tato zakázka zatím nemá rozpočet</p>
           {canEdit && (
             <button onClick={async () => {
@@ -186,7 +186,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
                   router.refresh();
                 }
               } catch (e) { console.error(e); }
-            }} className="px-4 py-2 bg-[#6366F1] text-white rounded-lg text-sm hover:bg-[#4F46E5]">
+            }} className="px-4 py-2 btn-glass-primary text-white rounded-xl text-sm">
               Vytvořit rozpočet
             </button>
           )}
@@ -197,7 +197,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
       {budget && (
         <>
           {/* Client info card */}
-          <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div className="glass rounded-xl p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
               <span className="text-xs text-[#78716C]">Klient</span>
               <p className="font-medium">{budget.client.name}</p>
@@ -223,15 +223,15 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
           </div>
 
           {/* Lines table */}
-          <div className="bg-white rounded-xl border border-[#E7E5E4]">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[#E7E5E4]">
+          <div className="glass rounded-xl">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-black/5">
               <h3 className="text-sm font-semibold text-[#1C1917]">
                 Položky rozpočtu ({lines.length})
                 {totalHours > 0 && <span className="text-xs text-[#78716C] ml-2 font-normal">{totalHours}h plánováno</span>}
               </h3>
               {canEdit && (
                 <div className="flex items-center gap-2">
-                  <select value={addingType} onChange={(e) => setAddingType(e.target.value)} className="text-xs px-2 py-1.5 rounded border border-[#E7E5E4] bg-white">
+                  <select value={addingType} onChange={(e) => setAddingType(e.target.value)} className="text-xs px-2 py-1.5 rounded glass">
                     <option value="INTERNI_PRACE">Interní práce</option>
                     <option value="EXTERNI_NAKLAD">Externí náklad</option>
                     <option value="PREFAKTURACE">Přefakturace</option>
@@ -240,7 +240,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
                     <option value="SKUPINA">Skupina</option>
                     <option value="TEXT">Text</option>
                   </select>
-                  <button onClick={() => setShowAddForm(!showAddForm)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-medium hover:bg-[#4F46E5]">
+                  <button onClick={() => setShowAddForm(!showAddForm)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg btn-glass-primary text-white text-xs font-medium hover:bg-[#4F46E5]">
                     <Plus className="w-3 h-3" /> Přidat
                   </button>
                 </div>
@@ -249,7 +249,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
 
             {/* Add form */}
             {showAddForm && (
-              <form onSubmit={handleAddLine} className="px-5 py-4 border-b bg-[#FAF8F5] space-y-3">
+              <form onSubmit={handleAddLine} className="px-5 py-4 border-b bg-white/30 space-y-3">
                 <input type="hidden" name="type" value={addingType} />
                 <div className="grid grid-cols-6 gap-3">
                   <div className="col-span-2">
@@ -294,7 +294,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
                 </div>
                 <div className="flex gap-2 justify-end">
                   <button type="button" onClick={() => setShowAddForm(false)} className="px-3 py-1.5 text-xs text-[#78716C]">Zrušit</button>
-                  <button type="submit" className="px-4 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs">Přidat položku</button>
+                  <button type="submit" className="px-4 py-1.5 rounded-lg btn-glass-primary text-white text-xs">Přidat položku</button>
                 </div>
               </form>
             )}
@@ -303,7 +303,7 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[#E7E5E4] text-xs text-[#78716C]">
+                  <tr className="border-b border-black/5 text-xs text-[#78716C]">
                     <th className="text-left px-5 py-3 font-medium">Položka</th>
                     <th className="text-right px-5 py-3 font-medium">Počet</th>
                     {viewMode === "internal" && <th className="text-right px-5 py-3 font-medium">Náklad/jedn.</th>}
@@ -313,15 +313,15 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
                     <th className="text-right px-5 py-3 font-medium w-12"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E7E5E4]">
+                <tbody className="divide-y divide-black/5">
                   {lines.filter((l) => viewMode !== "client" || !l.isInternalOnly).map((line) => (
-                    <tr key={line.id} className={cn("hover:bg-[#F5F5F4] transition-colors", getLineColor(line))}>
+                    <tr key={line.id} className={cn("hover:bg-white/40 transition-colors", getLineColor(line))}>
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2">
                           {line.type === "SKUPINA" && <span className="text-xs font-bold">{line.subject}</span>}
                           {line.type !== "SKUPINA" && (
                             <>
-                              <span className={cn("w-2 h-2 rounded-full shrink-0", line.type === "INTERNI_PRACE" ? "bg-blue-400" : line.type === "EXTERNI_NAKLAD" ? "bg-amber-400" : line.type === "PREFAKTURACE" ? "bg-purple-400" : line.type === "PAUSAL" ? "bg-green-400" : line.type === "SLEVA" ? "bg-red-400" : "bg-gray-300")} />
+                              <span className={cn("w-2 h-2 rounded-full shrink-0", line.type === "INTERNI_PRACE" ? "bg-indigo-400" : line.type === "EXTERNI_NAKLAD" ? "bg-amber-400" : line.type === "PREFAKTURACE" ? "bg-violet-400" : line.type === "PAUSAL" ? "bg-emerald-400" : line.type === "SLEVA" ? "bg-rose-400" : "bg-stone-300")} />
                               <div>
                                 <span className="text-[#1C1917]">{line.subject}</span>
                                 {line.clientDescription && viewMode === "client" && <p className="text-xs text-[#78716C]">{line.clientDescription}</p>}
@@ -334,17 +334,17 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
                       <td className="px-5 py-3 text-right">{line.type !== "INTERNI_PRACE" && line.type !== "PAUSAL" && line.type !== "TEXT" ? (line.type === "INTERNI_PRACE" ? `${line.plannedHours}h` : `${line.quantity} ${line.unit}`) : line.type === "INTERNI_PRACE" ? `${line.plannedHours}h` : "—"}</td>
                       {viewMode === "internal" && <td className="px-5 py-3 text-right text-[#78716C]">{line.unitCost ? `${line.unitCost.toLocaleString("cs-CZ")} Kč` : "—"}</td>}
                       <td className="px-5 py-3 text-right">{line.unitPrice ? `${line.unitPrice.toLocaleString("cs-CZ")} Kč` : "—"}</td>
-                      <td className={cn("px-5 py-3 text-right font-medium", line.totalExclVat >= 0 ? "text-emerald-600" : "text-red-500")}>{line.totalExclVat.toLocaleString("cs-CZ")} Kč</td>
+                      <td className={cn("px-5 py-3 text-right font-medium", line.totalExclVat >= 0 ? "text-emerald-600" : "text-rose-500")}>{line.totalExclVat.toLocaleString("cs-CZ")} Kč</td>
                       {viewMode === "internal" && (
                         <td className="px-5 py-3 text-right">
-                          <span className={cn("text-xs", line.plannedMargin >= 0 ? "text-green-600" : "text-red-500")}>
+                          <span className={cn("text-xs", line.plannedMargin >= 0 ? "text-emerald-600" : "text-rose-500")}>
                             {line.plannedMarginPercent}%
                           </span>
                         </td>
                       )}
                       <td className="px-5 py-3 text-right">
                         {canEdit && line.type !== "SKUPINA" && line.type !== "TEXT" && (
-                          <button onClick={() => handleDeleteLine(line.id)} className="p-1 rounded hover:bg-red-50 text-[#A8A29E] hover:text-red-500">
+                          <button onClick={() => handleDeleteLine(line.id)} className="p-1 rounded hover:bg-rose-50 text-[#A8A29E] hover:text-rose-500">
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                           </button>
                         )}
@@ -361,25 +361,25 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
 
           {/* Summary Box */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 border-l-4 border-l-emerald-500">
+            <div className="glass rounded-xl p-4 border-l-4 border-l-emerald-400">
               <p className="text-xs text-[#78716C]">Celkem bez DPH</p>
               <p className="text-xl font-semibold text-emerald-600 mt-1">{netRevenue.toLocaleString("cs-CZ")} Kč</p>
               <p className="text-xs text-[#78716C] mt-0.5">DPH: +{totalVat.toLocaleString("cs-CZ")} Kč</p>
             </div>
-            <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 border-l-4 border-l-amber-500">
+            <div className="glass rounded-xl p-4 border-l-4 border-l-amber-400">
               <p className="text-xs text-[#78716C]">Náklady</p>
               <p className="text-xl font-semibold text-[#1C1917] mt-1">{totalCosts.toLocaleString("cs-CZ")} Kč</p>
               <p className="text-xs text-[#78716C] mt-0.5">{totalHours}h plánovaných</p>
             </div>
-            <div className={cn("bg-white rounded-xl border border-[#E7E5E4] p-4 border-l-4", marginPercent >= 30 ? "border-l-emerald-500" : marginPercent >= 15 ? "border-l-amber-500" : "border-l-red-500")}>
+            <div className={cn("glass rounded-xl p-4 border-l-4", marginPercent >= 30 ? "border-l-emerald-400" : marginPercent >= 15 ? "border-l-amber-400" : "border-l-red-500")}>
               <p className="text-xs text-[#78716C]">Marže</p>
               <div className="flex items-center gap-2 mt-1">
-                {grossMargin >= 0 ? <TrendingUp className="w-5 h-5 text-green-500" /> : <TrendingDown className="w-5 h-5 text-red-500" />}
+                {grossMargin >= 0 ? <TrendingUp className="w-5 h-5 text-emerald-500" /> : <TrendingDown className="w-5 h-5 text-rose-500" />}
                 <p className={cn("text-xl font-semibold", marginColor)}>{grossMargin.toLocaleString("cs-CZ")} Kč</p>
               </div>
               <p className={cn("text-xs mt-0.5", marginColor)}>{marginPercent}% marže</p>
             </div>
-            <div className="bg-white rounded-xl border border-[#E7E5E4] p-4 border-l-4 border-l-purple-500">
+            <div className="glass rounded-xl p-4 border-l-4 border-l-purple-500">
               <p className="text-xs text-[#78716C]">S DPH (21%)</p>
               <p className="text-xl font-semibold text-[#1C1917] mt-1">{totalWithVat.toLocaleString("cs-CZ")} Kč</p>
               <p className="text-xs text-[#78716C] mt-0.5">K fakturaci</p>
@@ -388,12 +388,12 @@ export function ProjectBudgetNewTab({ projectId, canEdit, users, budget }: Props
 
           {/* Margin warning */}
           {marginPercent < 15 && marginPercent >= 0 && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-3 text-sm text-amber-700">
+            <div className="bg-amber-500/10 border border-amber-500/25 rounded-xl px-5 py-3 text-sm text-amber-800">
               ⚠ Marže je pouze {marginPercent}% — doporučujeme navýšit ceny nebo snížit náklady.
             </div>
           )}
           {marginPercent < 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-xl px-5 py-3 text-sm text-red-700">
+            <div className="bg-rose-500/10 border border-rose-500/25 rounded-xl px-5 py-3 text-sm text-rose-700">
               🚫 Marže je záporná ({marginPercent}%) — zakázka je ve ztrátě!
             </div>
           )}

@@ -47,9 +47,9 @@ export function FinanceProjectList({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-[#E7E5E4] divide-y divide-[#E7E5E4]">
+    <div className="glass rounded-xl divide-y divide-black/5">
       {/* Header */}
-      <div className="hidden lg:grid lg:grid-cols-12 px-5 py-3 text-xs font-medium text-[#78716C]">
+      <div className="hidden lg:grid lg:grid-cols-12 px-5 py-3 text-xs font-medium text-[#78716C] gap-2">
         <div className="col-span-1"></div>
         <div className="col-span-3">Zakázka</div>
         <div className="col-span-2">Klient</div>
@@ -66,7 +66,7 @@ export function FinanceProjectList({
           <div key={p.id}>
             {/* Row */}
             <div
-              className="grid grid-cols-1 lg:grid-cols-12 px-5 py-3 hover:bg-[#F5F5F4] transition-colors cursor-pointer items-center gap-2"
+              className="grid grid-cols-1 lg:grid-cols-12 px-5 py-3 hover:bg-white/40 transition-colors cursor-pointer items-center gap-2"
               onClick={() => toggle(p.id)}
             >
               <div className="lg:col-span-1 flex items-center">
@@ -91,7 +91,7 @@ export function FinanceProjectList({
               <div className="lg:col-span-1 text-sm text-right font-medium text-emerald-600">
                 {(p.totalRevenueBudget || p.budgetAmount || 0).toLocaleString("cs-CZ")}
               </div>
-              <div className="lg:col-span-1 text-sm text-right text-red-500">
+              <div className="lg:col-span-1 text-sm text-right text-rose-500">
                 {p.totalExpenses.toLocaleString("cs-CZ")}
               </div>
               <div className="lg:col-span-1 text-sm text-right text-[#78716C]">
@@ -101,7 +101,7 @@ export function FinanceProjectList({
                 <span
                   className={cn(
                     "font-medium",
-                    p.margin >= 0 ? "text-green-600" : "text-red-600"
+                    p.margin >= 0 ? "text-emerald-600" : "text-rose-600"
                   )}
                 >
                   {p.margin}%
@@ -114,7 +114,7 @@ export function FinanceProjectList({
 
             {/* Expanded budget items */}
             {isExpanded && (
-              <div className="bg-[#FAF8F5] border-t border-[#E7E5E4]">
+              <div className="bg-white/30 border-t border-black/5">
                 <div className="px-5 py-3">
                   <div className="text-xs font-medium text-[#78716C] mb-3">
                     Položky rozpočtu
@@ -135,7 +135,7 @@ export function FinanceProjectList({
                                 "w-2 h-2 rounded-full",
                                 item.type === "REVENUE"
                                   ? "bg-emerald-500"
-                                  : "bg-red-400"
+                                  : "bg-rose-400"
                               )}
                             />
                             <span className="text-[#1C1917]">{item.name}</span>
@@ -148,7 +148,7 @@ export function FinanceProjectList({
                               "font-medium",
                               item.type === "REVENUE"
                                 ? "text-emerald-600"
-                                : "text-red-500"
+                                : "text-rose-500"
                             )}
                           >
                             {item.total.toLocaleString("cs-CZ")} Kč
@@ -159,11 +159,11 @@ export function FinanceProjectList({
                   )}
 
                   {/* Summary */}
-                  <div className="flex items-center gap-6 mt-3 pt-3 border-t border-[#E7E5E4] text-sm">
+                  <div className="flex items-center gap-6 mt-3 pt-3 border-t border-black/5 text-sm">
                     <span className="text-emerald-600 font-medium">
                       Výnosy: {p.totalRevenueBudget.toLocaleString("cs-CZ")} Kč
                     </span>
-                    <span className="text-red-500 font-medium">
+                    <span className="text-rose-500 font-medium">
                       Náklady: {p.totalCostBudget.toLocaleString("cs-CZ")} Kč
                     </span>
                     {p.discountPercent ? (

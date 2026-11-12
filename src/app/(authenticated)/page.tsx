@@ -60,7 +60,7 @@ export default async function DashboardPage() {
 
       {/* Stats cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#78716C]">Moje úkoly</p>
             <CheckSquare className="w-4 h-4 text-[#6366F1]" />
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
           </p>
           <p className="text-xs text-[#78716C] mt-1">nehotových úkolů</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#78716C]">Aktivní zakázky</p>
             <FolderKanban className="w-4 h-4 text-[#6366F1]" />
@@ -82,17 +82,17 @@ export default async function DashboardPage() {
             z {projects.length} celkem
           </p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#78716C]">Po deadline</p>
-            <AlertTriangle className="w-4 h-4 text-red-500" />
+            <AlertTriangle className="w-4 h-4 text-rose-500" />
           </div>
           <p className="text-2xl font-semibold text-[#1C1917] mt-1">
             {overdueProjects.length}
           </p>
-          <p className="text-xs text-red-500 mt-1">vyžaduje pozornost</p>
+          <p className="text-xs text-rose-500 mt-1">vyžaduje pozornost</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#78716C]">V riziku</p>
             <Clock className="w-4 h-4 text-amber-500" />
@@ -107,8 +107,8 @@ export default async function DashboardPage() {
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* My tasks */}
-        <div className="bg-white rounded-xl border border-[#E7E5E4]">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-[#E7E5E4]">
+        <div className="glass rounded-xl">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-black/5">
             <h2 className="text-sm font-semibold text-[#1C1917]">Moje úkoly</h2>
             <Link
               href="/tasks"
@@ -117,7 +117,7 @@ export default async function DashboardPage() {
               Všechny úkoly <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
-          <div className="divide-y divide-[#E7E5E4]">
+          <div className="divide-y divide-black/5">
             {myTasks.length === 0 && (
               <p className="px-5 py-8 text-sm text-[#78716C] text-center">
                 Žádné nehotové úkoly. Skvělá práce! 🎉
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
               <Link
                 key={task.id}
                 href={`/projects/${task.projectId}`}
-                className="flex items-center gap-3 px-5 py-3 hover:bg-[#F5F5F4] transition-colors"
+                className="flex items-center gap-3 px-5 py-3 hover:bg-white/40 transition-colors"
               >
                 <TaskStatusBadge status={task.status} />
                 <div className="flex-1 min-w-0">
@@ -142,7 +142,7 @@ export default async function DashboardPage() {
                   <span
                     className={`text-xs shrink-0 ${
                       isBefore(task.deadline, today)
-                        ? "text-red-500"
+                        ? "text-rose-500"
                         : "text-[#78716C]"
                     }`}
                   >
@@ -155,8 +155,8 @@ export default async function DashboardPage() {
         </div>
 
         {/* Projects Overview */}
-        <div className="bg-white rounded-xl border border-[#E7E5E4]">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-[#E7E5E4]">
+        <div className="glass rounded-xl">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-black/5">
             <h2 className="text-sm font-semibold text-[#1C1917]">
               Projekty přehled
             </h2>
@@ -187,7 +187,7 @@ export default async function DashboardPage() {
                 <Link
                   key={project.id}
                   href={`/projects/${project.id}`}
-                  className="flex items-center justify-between px-3 py-2 rounded-lg bg-red-50 hover:bg-red-100 transition-colors"
+                  className="flex items-center justify-between px-3 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-[#1C1917] truncate">
@@ -197,7 +197,7 @@ export default async function DashboardPage() {
                       {project.client.name}
                     </p>
                   </div>
-                  <span className="text-xs text-red-600 shrink-0">
+                  <span className="text-xs text-rose-600 shrink-0">
                     {project.deadline && format(project.deadline, "d.M.")}
                   </span>
                 </Link>
@@ -212,18 +212,18 @@ export default async function DashboardPage() {
         </div>
 
         {/* Recent projects */}
-        <div className="bg-white rounded-xl border border-[#E7E5E4]">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-[#E7E5E4]">
+        <div className="glass rounded-xl">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-black/5">
             <h2 className="text-sm font-semibold text-[#1C1917]">
               Naposledy přidané
             </h2>
           </div>
-          <div className="divide-y divide-[#E7E5E4]">
+          <div className="divide-y divide-black/5">
             {recentProjects.map((project) => (
               <Link
                 key={project.id}
                 href={`/projects/${project.id}`}
-                className="flex items-center justify-between px-5 py-3 hover:bg-[#F5F5F4] transition-colors"
+                className="flex items-center justify-between px-5 py-3 hover:bg-white/40 transition-colors"
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-[#1C1917] truncate">
@@ -238,23 +238,23 @@ export default async function DashboardPage() {
         </div>
 
         {/* Status distribution */}
-        <div className="bg-white rounded-xl border border-[#E7E5E4]">
-          <div className="px-5 py-4 border-b border-[#E7E5E4]">
+        <div className="glass rounded-xl">
+          <div className="px-5 py-4 border-b border-black/5">
             <h2 className="text-sm font-semibold text-[#1C1917]">
               Stav zakázek
             </h2>
           </div>
           <div className="p-5 space-y-3">
             {[
-              ["NOVY", "Nový", "bg-blue-100"],
-              ["V_PRIPRAVE", "V přípravě", "bg-amber-100"],
-              ["CEKA_NA_KLIENTA", "Čeká na klienta", "bg-purple-100"],
-              ["BEZI", "Běží", "bg-emerald-100"],
-              ["V_INTERNI_KONTROLE", "Interní kontrola", "bg-cyan-100"],
-              ["V_KLIENTSKE_KONTROLE", "Klientská kontrola", "bg-indigo-100"],
-              ["DOKONCENO", "Dokončeno", "bg-green-100"],
-              ["FAKTUROVANO", "Fakturováno", "bg-slate-100"],
-              ["ARCHIVOVANO", "Archivováno", "bg-gray-100"],
+              ["NOVY", "Nový", "bar-sky"],
+              ["V_PRIPRAVE", "V přípravě", "bar-amber"],
+              ["CEKA_NA_KLIENTA", "Čeká na klienta", "bar-violet"],
+              ["BEZI", "Běží", "bar-emerald"],
+              ["V_INTERNI_KONTROLE", "Interní kontrola", "bar-indigo"],
+              ["V_KLIENTSKE_KONTROLE", "Klientská kontrola", "bar-violet"],
+              ["DOKONCENO", "Dokončeno", "bar-teal"],
+              ["FAKTUROVANO", "Fakturováno", "bar-stone"],
+              ["ARCHIVOVANO", "Archivováno", "bar-stone"],
             ].map(([key, label, color]) => {
               const count = statusMap[key] || 0;
               const maxCount = Math.max(...Object.values(statusMap), 1);
@@ -263,7 +263,7 @@ export default async function DashboardPage() {
                   <span className="text-xs text-[#78716C] w-28 shrink-0">
                     {label}
                   </span>
-                  <div className="flex-1 h-5 bg-[#F5F5F4] rounded-full overflow-hidden">
+                  <div className="flex-1 h-5 bg-white/35 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${color}`}
                       style={{

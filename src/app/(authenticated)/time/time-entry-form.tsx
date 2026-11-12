@@ -41,7 +41,7 @@ export function TimeEntryForm({ userId }: { userId: string }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3"
+      className="glass rounded-xl p-4 space-y-3"
     >
       <h2 className="text-sm font-semibold text-[#1C1917]">Rychlý záznam času</h2>
 
@@ -51,7 +51,7 @@ export function TimeEntryForm({ userId }: { userId: string }) {
           required
           onClick={loadProjects}
           onFocus={loadProjects}
-          className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+          className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
         >
           <option value="">Vyber projekt...</option>
           {projects.map((p) => (
@@ -70,7 +70,7 @@ export function TimeEntryForm({ userId }: { userId: string }) {
             type="date"
             required
             defaultValue={new Date().toISOString().split("T")[0]}
-            className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm"
+            className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
           />
         </div>
         <div>
@@ -81,7 +81,7 @@ export function TimeEntryForm({ userId }: { userId: string }) {
             step="0.5"
             required
             placeholder="2.5"
-            className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm"
+            className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
           />
         </div>
       </div>
@@ -91,7 +91,7 @@ export function TimeEntryForm({ userId }: { userId: string }) {
         <input
           name="description"
           placeholder="Co jsi dělal?"
-          className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm"
+          className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function TimeEntryForm({ userId }: { userId: string }) {
         <select
           name="billable"
           defaultValue="true"
-          className="px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm bg-white"
+          className="px-3 py-2 rounded-lg border border-white/40 text-sm bg-white"
         >
           <option value="true">Fakturovatelný</option>
           <option value="false">Nefakturovatelný</option>
@@ -108,7 +108,7 @@ export function TimeEntryForm({ userId }: { userId: string }) {
           type="submit"
           disabled={loading}
           size="sm"
-          className="bg-[#6366F1] hover:bg-[#4F46E5] text-white ml-auto gap-2"
+          className="btn-glass-primary text-white ml-auto gap-2"
         >
           <Send className="w-3 h-3" />
           {loading ? "..." : "Uložit"}

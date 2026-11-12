@@ -31,7 +31,7 @@ export default async function ClientDetailPage({
       <div className="flex items-center gap-4">
         <Link
           href="/clients"
-          className="p-2 rounded-lg hover:bg-[#F5F5F4] text-[#78716C] transition-colors"
+          className="p-2 rounded-lg hover:bg-white/40 text-[#78716C] transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -52,7 +52,7 @@ export default async function ClientDetailPage({
 
       {/* Info + Contact */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl border border-[#E7E5E4] p-5">
+        <div className="lg:col-span-2 glass rounded-xl p-5">
           <h2 className="text-sm font-semibold text-[#1C1917] mb-4">
             Kontaktní informace
           </h2>
@@ -95,7 +95,7 @@ export default async function ClientDetailPage({
             </div>
           </div>
           {client.note && (
-            <div className="mt-4 pt-4 border-t border-[#E7E5E4]">
+            <div className="mt-4 pt-4 border-t border-black/5">
               <p className="text-xs text-[#78716C] mb-1">Poznámka</p>
               <p className="text-sm text-[#1C1917]">{client.note}</p>
             </div>
@@ -103,7 +103,7 @@ export default async function ClientDetailPage({
         </div>
 
         {/* Quick stats */}
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-5">
+        <div className="glass rounded-xl p-5">
           <h2 className="text-sm font-semibold text-[#1C1917] mb-4">
             Přehled
           </h2>
@@ -140,16 +140,16 @@ export default async function ClientDetailPage({
       </div>
 
       {/* Projects */}
-      <div className="bg-white rounded-xl border border-[#E7E5E4]">
-        <div className="px-5 py-4 border-b border-[#E7E5E4]">
+      <div className="glass rounded-xl">
+        <div className="px-5 py-4 border-b border-black/5">
           <h2 className="text-sm font-semibold text-[#1C1917]">Projekty</h2>
         </div>
-        <div className="divide-y divide-[#E7E5E4]">
+        <div className="divide-y divide-black/5">
           {client.projects.map((project) => (
             <Link
               key={project.id}
               href={`/projects/${project.id}`}
-              className="flex items-center justify-between px-5 py-3 hover:bg-[#F5F5F4] transition-colors"
+              className="flex items-center justify-between px-5 py-3 hover:bg-white/40 transition-colors"
             >
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-[#1C1917] truncate">

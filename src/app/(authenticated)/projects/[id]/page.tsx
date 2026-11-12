@@ -48,7 +48,7 @@ export default async function ProjectDetailPage({
       <div className="flex items-center gap-4">
         <Link
           href="/projects"
-          className="p-2 rounded-lg hover:bg-[#F5F5F4] text-[#78716C] transition-colors"
+          className="p-2 rounded-lg hover:bg-white/40 text-[#78716C] transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -91,7 +91,7 @@ export default async function ProjectDetailPage({
 
       {/* Description / Brief */}
       {project.description && (
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <p className="text-sm text-[#1C1917] whitespace-pre-wrap">{project.description}</p>
         </div>
       )}

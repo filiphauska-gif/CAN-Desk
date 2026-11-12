@@ -57,7 +57,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (v) loadClients(); }}>
-      <DialogTrigger className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-[#6366F1] text-white hover:bg-[#4F46E5] px-2.5 h-8 gap-1.5 text-sm font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
+      <DialogTrigger className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent btn-glass-primary text-white hover:bg-[#4F46E5] px-2.5 h-8 gap-1.5 text-sm font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
           <Plus className="w-4 h-4" />
           Nová zakázka
       </DialogTrigger>
@@ -73,7 +73,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
             <input
               name="name"
               required
-              className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
               placeholder="Např. Jarní kampaň AutoMotiva"
             />
           </div>
@@ -84,7 +84,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
             <select
               name="clientId"
               required
-              className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
             >
               <option value="">Vyber klienta</option>
               {clients.map((c) => (
@@ -100,7 +100,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
             </label>
             <select
               name="accountId"
-              className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
             >
               <option value="">Vyber account managera</option>
               {users
@@ -120,7 +120,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
               <input
                 name="deadline"
                 type="date"
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
               />
             </div>
             <div>
@@ -130,7 +130,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
               <input
                 name="budgetAmount"
                 type="number"
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
                 placeholder="Např. 850000"
               />
             </div>
@@ -142,7 +142,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
             <textarea
               name="description"
               rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] resize-none"
               placeholder="Stručný popis zakázky..."
             />
           </div>
@@ -157,7 +157,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
             <Button
               type="submit"
               disabled={loading}
-              className="bg-[#6366F1] hover:bg-[#4F46E5] text-white"
+              className="btn-glass-primary text-white"
             >
               {loading ? "Vytvářím..." : "Vytvořit zakázku"}
             </Button>

@@ -93,9 +93,9 @@ export function DayDetail({
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-12">
       <div className="fixed inset-0 bg-black/30" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-xl border border-[#E7E5E4] w-full max-w-lg max-h-[80vh] overflow-y-auto">
+      <div className="relative bg-white rounded-xl shadow-xl border border-white/40 w-full max-w-lg max-h-[80vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E7E5E4]">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-black/5">
           <div>
             <h3 className="text-sm font-semibold text-[#1C1917]">
               {format(date, "EEEE d. MMMM yyyy", { locale: cs })}
@@ -105,12 +105,12 @@ export function DayDetail({
           <div className="flex items-center gap-2">
             <button
               onClick={() => { setEntryType("WORK"); setShowForm(!showForm); }}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-medium hover:bg-[#4F46E5] transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg btn-glass-primary text-white text-xs font-medium hover:bg-[#4F46E5] transition-colors"
             >
               <Plus className="w-3 h-3" />
               Přidat
             </button>
-            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#F5F5F4] text-[#78716C]">
+            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/40 text-[#78716C]">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -118,7 +118,7 @@ export function DayDetail({
 
         {/* Add form */}
         {showForm && (
-          <form onSubmit={handleSubmit} className="px-5 py-4 border-b border-[#E7E5E4] bg-[#FAF8F5] space-y-3">
+          <form onSubmit={handleSubmit} className="px-5 py-4 border-b border-black/5 bg-white/30 space-y-3">
             {/* Entry type selector */}
             <div className="flex gap-2">
               {[
@@ -132,8 +132,8 @@ export function DayDetail({
                   onClick={() => setEntryType(value)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                     entryType === value
-                      ? "bg-[#6366F1] text-white"
-                      : "bg-white border border-[#E7E5E4] text-[#78716C] hover:border-[#6366F1]"
+                      ? "btn-glass-primary text-white"
+                      : "bg-white border border-white/40 text-[#78716C] hover:border-[#6366F1]"
                   }`}
                 >
                   <Icon className="w-3 h-3" />
@@ -149,7 +149,7 @@ export function DayDetail({
               <select
                 name="projectId"
                 required
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
               >
                 <option value="">Vyber zakázku...</option>
                 {projects.map((p) => (
@@ -164,7 +164,7 @@ export function DayDetail({
                 <select
                   name="hours"
                   required
-                  className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                  className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
                 >
                   {hoursOptions.map((h) => (
                     <option key={h} value={h}>
@@ -179,7 +179,7 @@ export function DayDetail({
                   <select
                     name="billable"
                     defaultValue="true"
-                    className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                    className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
                   >
                     <option value="true">Fakturovatelný</option>
                     <option value="false">Režie</option>
@@ -193,7 +193,7 @@ export function DayDetail({
                 <input
                   name="description"
                   placeholder="Popis práce..."
-                  className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                  className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
                 />
               </div>
             )}
@@ -202,7 +202,7 @@ export function DayDetail({
               <button type="button" onClick={() => setShowForm(false)} className="px-3 py-1.5 text-xs text-[#78716C] hover:text-[#1C1917]">
                 Zrušit
               </button>
-              <button type="submit" disabled={loading} className="px-4 py-1.5 rounded-lg bg-[#6366F1] text-white text-xs font-medium hover:bg-[#4F46E5] disabled:opacity-50">
+              <button type="submit" disabled={loading} className="px-4 py-1.5 rounded-lg btn-glass-primary text-white text-xs font-medium hover:bg-[#4F46E5] disabled:opacity-50">
                 {loading ? "..." : "Uložit"}
               </button>
             </div>
@@ -210,14 +210,14 @@ export function DayDetail({
         )}
 
         {/* Day entries */}
-        <div className="divide-y divide-[#E7E5E4]">
+        <div className="divide-y divide-black/5">
           {dayData && dayData.entries.map((entry, i) => (
             <div key={entry.id || i} className="px-5 py-3 flex items-center gap-3">
               <span className={cn(
                 "w-2 h-2 rounded-full shrink-0",
-                entry.entryType === "VACATION" ? "bg-blue-500" :
-                entry.entryType === "SICK" ? "bg-red-500" :
-                entry.billable ? "bg-emerald-500" : "bg-gray-400"
+                entry.entryType === "VACATION" ? "bg-sky-500" :
+                entry.entryType === "SICK" ? "bg-rose-500" :
+                entry.billable ? "bg-emerald-500" : "bg-stone-400"
               )} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-[#1C1917] truncate">
@@ -229,9 +229,9 @@ export function DayDetail({
               </div>
               <span className={cn(
                 "text-sm font-medium shrink-0",
-                entry.entryType === "VACATION" ? "text-blue-600" :
-                entry.entryType === "SICK" ? "text-red-600" :
-                entry.billable ? "text-green-600" : "text-[#78716C]"
+                entry.entryType === "VACATION" ? "text-sky-600" :
+                entry.entryType === "SICK" ? "text-rose-600" :
+                entry.billable ? "text-emerald-600" : "text-[#78716C]"
               )}>
                 {entry.hours.toFixed(2).replace(".", ",")}h
               </span>

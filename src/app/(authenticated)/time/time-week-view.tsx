@@ -58,7 +58,7 @@ export function TimeWeekView({
         <div className="flex items-center gap-3">
           <button
             onClick={() => setCurrentWeekStart(subWeeks(currentWeekStart, 1))}
-            className="p-1.5 rounded-lg hover:bg-[#F5F5F4] text-[#78716C]"
+            className="p-1.5 rounded-lg hover:bg-white/40 text-[#78716C]"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -68,7 +68,7 @@ export function TimeWeekView({
           </h3>
           <button
             onClick={() => setCurrentWeekStart(addWeeks(currentWeekStart, 1))}
-            className="p-1.5 rounded-lg hover:bg-[#F5F5F4] text-[#78716C]"
+            className="p-1.5 rounded-lg hover:bg-white/40 text-[#78716C]"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -76,9 +76,9 @@ export function TimeWeekView({
       </div>
 
       {/* Column layout */}
-      <div className="bg-white rounded-xl border border-[#E7E5E4] overflow-hidden">
+      <div className="glass rounded-xl overflow-hidden">
         {/* Header row - day names */}
-        <div className="grid grid-cols-7 border-b border-[#E7E5E4]">
+        <div className="grid grid-cols-7 border-b border-black/5">
           {days.map((day, i) => {
             const dayKey = format(day, "yyyy-MM-dd");
             const data = dayDataMap[dayKey];
@@ -88,9 +88,9 @@ export function TimeWeekView({
               <div
                 key={i}
                 className={cn(
-                  "px-2 py-3 text-center border-r last:border-r-0 border-[#E7E5E4]",
+                  "px-2 py-3 text-center border-r last:border-r-0 border-white/40",
                   isToday(day) && "bg-[#EEF2FF]",
-                  isWeekend && "bg-[#FAF8F5]"
+                  isWeekend && "bg-white/30"
                 )}
               >
                 <div className="text-xs font-medium text-[#78716C]">
@@ -126,9 +126,9 @@ export function TimeWeekView({
               <div
                 key={i}
                 className={cn(
-                  "min-h-[200px] p-2 border-r last:border-r-0 border-b border-[#E7E5E4]",
+                  "min-h-[200px] p-2 border-r last:border-r-0 border-b border-black/5",
                   isToday(day) && "bg-[#EEF2FF]",
-                  isWeekend && "bg-[#FAF8F5]"
+                  isWeekend && "bg-white/30"
                 )}
               >
                 {/* Entries */}
@@ -139,12 +139,12 @@ export function TimeWeekView({
                       className={cn(
                         "px-2 py-1.5 rounded-md text-xs border",
                         entry.entryType === "VACATION"
-                          ? "bg-blue-50 border-blue-200 text-blue-700"
+                          ? "bg-sky-50 border-sky-200 text-sky-700"
                           : entry.entryType === "SICK"
-                          ? "bg-red-50 border-red-200 text-red-700"
+                          ? "bg-rose-50 border-rose-200 text-rose-700"
                           : entry.billable
                           ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                          : "bg-gray-50 border-gray-200 text-gray-600"
+                          : "bg-stone-50 border-stone-200 text-stone-600"
                       )}
                     >
                       <div className="font-medium truncate">
@@ -165,7 +165,7 @@ export function TimeWeekView({
                 {/* Add button */}
                 <button
                   onClick={() => onDayClick(day)}
-                  className="mt-2 flex items-center gap-1 px-2 py-1 rounded-md text-xs text-[#78716C] hover:bg-[#F5F5F4] hover:text-[#6366F1] transition-colors w-full justify-center"
+                  className="mt-2 flex items-center gap-1 px-2 py-1 rounded-md text-xs text-[#78716C] hover:bg-white/40 hover:text-[#6366F1] transition-colors w-full justify-center"
                 >
                   <Plus className="w-3 h-3" />
                   Přidat

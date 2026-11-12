@@ -46,28 +46,28 @@ export default async function TimePage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#78716C]">Můj čas</p>
             <Clock className="w-4 h-4 text-[#6366F1]" />
           </div>
           <p className="text-2xl font-semibold text-[#1C1917] mt-1">{myHours}h</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#78716C]">Fakturovatelný</p>
-            <TrendingUp className="w-4 h-4 text-green-500" />
+            <TrendingUp className="w-4 h-4 text-emerald-500" />
           </div>
-          <p className="text-2xl font-semibold text-green-600 mt-1">{myBillable}h</p>
+          <p className="text-2xl font-semibold text-emerald-600 mt-1">{myBillable}h</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#78716C]">Režie</p>
             <Clock className="w-4 h-4 text-amber-500" />
           </div>
           <p className="text-2xl font-semibold text-[#78716C] mt-1">{(myHours - myBillable).toFixed(1)}h</p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-[#78716C]">Dnů v měsíci</p>
             <Users className="w-4 h-4 text-[#6366F1]" />
@@ -85,17 +85,17 @@ export default async function TimePage() {
       />
 
       {/* Team overview */}
-      <div className="bg-white rounded-xl border border-[#E7E5E4]">
-        <div className="flex items-center gap-2 px-5 py-4 border-b border-[#E7E5E4]">
+      <div className="glass rounded-xl">
+        <div className="flex items-center gap-2 px-5 py-4 border-b border-black/5">
           <Users className="w-4 h-4 text-[#78716C]" />
           <h2 className="text-sm font-semibold text-[#1C1917]">Tým tento měsíc</h2>
         </div>
-        <div className="divide-y divide-[#E7E5E4]">
+        <div className="divide-y divide-black/5">
           {teamSummary.map((member: any) => (
             <div key={member.id} className="px-5 py-3 flex items-center justify-between">
               <span className="text-sm text-[#1C1917]">{member.name}</span>
               <div className="flex items-center gap-4">
-                <span className={cn("text-xs", member.total > 0 ? "text-green-600" : "text-[#78716C]")}>
+                <span className={cn("text-xs", member.total > 0 ? "text-emerald-600" : "text-[#78716C]")}>
                   fakt.: {member.billable.toFixed(1)}h
                 </span>
                 <span className="text-sm font-medium">{member.total.toFixed(1)}h</span>

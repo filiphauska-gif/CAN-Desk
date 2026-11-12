@@ -44,7 +44,7 @@ export function ProjectStatusSwitcher({
         value={status}
         onChange={(e) => handleChange(e.target.value)}
         disabled={loading}
-        className="text-xs px-2 py-1 rounded border border-[#E7E5E4] bg-white text-[#78716C] hover:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1] cursor-pointer"
+        className="text-xs px-2 py-1 rounded glass text-[#78716C] hover:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1] cursor-pointer"
       >
         {Object.entries(projectStatusLabels).map(([key, label]) => (
           <option key={key} value={key}>

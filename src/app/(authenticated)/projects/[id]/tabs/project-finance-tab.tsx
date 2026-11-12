@@ -62,7 +62,7 @@ export function ProjectFinanceTab({
     <div className="space-y-4">
       {/* Financial overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <p className="text-xs text-[#78716C]">Rozpočet</p>
           <p className="text-xl font-semibold text-[#1C1917] mt-1">
             {budget.toLocaleString("cs-CZ")} Kč
@@ -71,7 +71,7 @@ export function ProjectFinanceTab({
             <p className="text-xs text-[#78716C] mt-0.5">{budgetHours} alokovaných hodin</p>
           )}
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <p className="text-xs text-[#78716C]">Náklady celkem</p>
           <p className="text-xl font-semibold text-[#1C1917] mt-1">
             {totalCosts.toLocaleString("cs-CZ")} Kč
@@ -80,22 +80,22 @@ export function ProjectFinanceTab({
             Interní: {internalCosts.toLocaleString("cs-CZ")} Kč • Externí: {externalCosts.toLocaleString("cs-CZ")} Kč
           </p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <p className="text-xs text-[#78716C]">Odpracováno</p>
           <p className="text-xl font-semibold text-[#1C1917] mt-1">{totalHours}h</p>
           <p className="text-xs text-[#78716C] mt-0.5">
             Práce: {estimatedLaborCost.toLocaleString("cs-CZ")} Kč
           </p>
         </div>
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <p className="text-xs text-[#78716C]">Marže</p>
           <div className="flex items-center gap-2 mt-1">
             {margin >= 0 ? (
-              <TrendingUp className="w-5 h-5 text-green-500" />
+              <TrendingUp className="w-5 h-5 text-emerald-500" />
             ) : (
-              <TrendingDown className="w-5 h-5 text-red-500" />
+              <TrendingDown className="w-5 h-5 text-rose-500" />
             )}
-            <p className={`text-xl font-semibold ${margin >= 0 ? "text-green-600" : "text-red-600"}`}>
+            <p className={`text-xl font-semibold ${margin >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
               {margin}%
             </p>
           </div>
@@ -107,16 +107,16 @@ export function ProjectFinanceTab({
 
       {/* Budget utilization */}
       {budget > 0 && (
-        <div className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+        <div className="glass rounded-xl p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-[#78716C]">Vytížení rozpočtu</span>
             <span className="text-sm font-medium">{budgetUtilization}%</span>
           </div>
-          <div className="h-3 bg-[#F5F5F4] rounded-full overflow-hidden">
+          <div className="h-3 bg-white/35 rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all ${
                 budgetUtilization > 90
-                  ? "bg-red-500"
+                  ? "bg-rose-500"
                   : budgetUtilization > 70
                   ? "bg-amber-500"
                   : "bg-[#6366F1]"
@@ -143,14 +143,14 @@ export function ProjectFinanceTab({
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-[#E7E5E4] p-4 space-y-3">
+        <form onSubmit={handleSubmit} className="glass rounded-xl p-4 space-y-3">
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-2">
               <input
                 name="description"
                 required
                 placeholder="Popis nákladu"
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
               />
             </div>
             <div>
@@ -159,12 +159,12 @@ export function ProjectFinanceTab({
                 type="number"
                 required
                 placeholder="Částka"
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm"
+                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
               />
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <select name="type" className="px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm bg-white">
+            <select name="type" className="px-3 py-2 rounded-lg border border-white/40 text-sm bg-white">
               <option value="EXTERNAL">Externí náklad</option>
               <option value="INTERNAL">Interní náklad</option>
             </select>
@@ -172,7 +172,7 @@ export function ProjectFinanceTab({
               <Button type="button" variant="outline" size="sm" onClick={() => setShowForm(false)}>
                 Zrušit
               </Button>
-              <Button type="submit" size="sm" disabled={loading} className="bg-[#6366F1] text-white">
+              <Button type="submit" size="sm" disabled={loading} className="btn-glass-primary text-white">
                 {loading ? "..." : "Uložit"}
               </Button>
             </div>
@@ -181,8 +181,8 @@ export function ProjectFinanceTab({
       )}
 
       {/* Costs list */}
-      <div className="bg-white rounded-xl border border-[#E7E5E4]">
-        <div className="divide-y divide-[#E7E5E4]">
+      <div className="glass rounded-xl">
+        <div className="divide-y divide-black/5">
           {costs.map((cost: any) => (
             <div key={cost.id} className="px-5 py-3 flex items-center justify-between">
               <div>

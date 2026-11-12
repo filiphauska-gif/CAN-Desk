@@ -31,11 +31,11 @@ export default async function ClientsPage() {
           <Link
             key={client.id}
             href={`/clients/${client.id}`}
-            className="bg-white rounded-xl border border-[#E7E5E4] p-5 hover:border-[#6366F1]/30 hover:shadow-sm transition-all"
+            className="glass rounded-xl p-5 hover:border-[#6366F1]/30 hover:shadow-sm transition-all"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#F5F5F4] flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-white/35 flex items-center justify-center shrink-0">
                   <Building2 className="w-5 h-5 text-[#78716C]" />
                 </div>
                 <div>
@@ -76,7 +76,7 @@ export default async function ClientsPage() {
           </Link>
         ))}
         {clients.length === 0 && (
-          <div className="bg-white rounded-xl border border-[#E7E5E4] p-12 text-center">
+          <div className="glass rounded-xl p-12 text-center">
             <Building2 className="w-12 h-12 text-[#D6D3D1] mx-auto mb-3" />
             <p className="text-[#78716C]">Zatím žádní klienti</p>
             <p className="text-sm text-[#A8A29E] mt-1">

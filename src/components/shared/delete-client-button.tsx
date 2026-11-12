@@ -36,7 +36,7 @@ export function DeleteClientButton({ clientId }: { clientId: string }) {
       <Button
         variant="outline"
         size="sm"
-        className="gap-2 text-red-500 border-red-200 hover:bg-red-50"
+        className="gap-2 text-rose-500 border-rose-200 hover:bg-rose-50"
         onClick={() => setOpen(true)}
       >
         <Trash2 className="w-3 h-3" />
@@ -56,7 +56,7 @@ export function DeleteClientButton({ clientId }: { clientId: string }) {
             </Button>
             <Button
               variant="outline"
-              className="bg-red-500 text-white hover:bg-red-600"
+              className="bg-rose-500 text-white hover:bg-rose-600"
               onClick={handleDelete}
               disabled={loading}
             >

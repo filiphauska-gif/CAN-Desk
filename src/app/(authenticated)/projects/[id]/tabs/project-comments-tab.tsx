@@ -38,20 +38,20 @@ export function ProjectCommentsTab({
   return (
     <div className="space-y-4">
       {/* New comment form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-[#E7E5E4] p-4">
+      <form onSubmit={handleSubmit} className="glass rounded-xl p-4">
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Napsat komentář..."
           rows={3}
-          className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] resize-none"
+          className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] resize-none"
         />
         <div className="flex justify-end mt-3">
           <Button
             type="submit"
             disabled={!content.trim() || sending}
             size="sm"
-            className="bg-[#6366F1] hover:bg-[#4F46E5] text-white gap-2"
+            className="btn-glass-primary text-white gap-2"
           >
             <Send className="w-3 h-3" />
             {sending ? "Odesílám..." : "Odeslat"}
@@ -64,10 +64,10 @@ export function ProjectCommentsTab({
         {comments.map((comment: any) => (
           <div
             key={comment.id}
-            className="bg-white rounded-xl border border-[#E7E5E4] p-4"
+            className="glass rounded-xl p-4"
           >
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-8 h-8 rounded-full bg-[#F5F5F4] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-white/35 flex items-center justify-center">
                 <User className="w-4 h-4 text-[#78716C]" />
               </div>
               <div>
@@ -87,7 +87,7 @@ export function ProjectCommentsTab({
           </div>
         ))}
         {comments.length === 0 && (
-          <div className="bg-white rounded-xl border border-[#E7E5E4] p-12 text-center">
+          <div className="glass rounded-xl p-12 text-center">
             <p className="text-[#78716C]">Zatím žádné komentáře</p>
             <p className="text-sm text-[#A8A29E] mt-1">
               Buďte první, kdo napíše komentář k tomuto projektu

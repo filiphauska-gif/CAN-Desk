@@ -53,7 +53,7 @@ export function ClientEditDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="inline-flex shrink-0 items-center justify-center rounded-lg border border-[#E7E5E4] bg-white hover:bg-[#F5F5F4] px-2 h-7 gap-1 text-[0.8rem] font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer text-[#1C1917] [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5">
+      <DialogTrigger className="inline-flex shrink-0 items-center justify-center rounded-lg glass hover:bg-white/40 px-2 h-7 gap-1 text-[0.8rem] font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer text-[#1C1917] [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5">
           <Pencil className="w-3 h-3" />
           Upravit
       </DialogTrigger>
@@ -70,7 +70,7 @@ export function ClientEditDialog({
               name="name"
               required
               defaultValue={client.name}
-              className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -81,7 +81,7 @@ export function ClientEditDialog({
               <input
                 name="contactName"
                 defaultValue={client.contactName || ""}
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
               />
             </div>
             <div>
@@ -91,7 +91,7 @@ export function ClientEditDialog({
               <input
                 name="phone"
                 defaultValue={client.phone || ""}
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ export function ClientEditDialog({
               name="email"
               type="email"
               defaultValue={client.email || ""}
-              className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
             />
           </div>
           <div>
@@ -114,14 +114,14 @@ export function ClientEditDialog({
               name="note"
               rows={2}
               defaultValue={client.note || ""}
-              className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] resize-none"
             />
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Zrušit
             </Button>
-            <Button type="submit" disabled={loading} className="bg-[#6366F1] hover:bg-[#4F46E5] text-white">
+            <Button type="submit" disabled={loading} className="btn-glass-primary text-white">
               {loading ? "Ukládám..." : "Uložit změny"}
             </Button>
           </div>

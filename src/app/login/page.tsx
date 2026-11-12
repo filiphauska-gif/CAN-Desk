@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -23,6 +25,7 @@ export default function LoginPage() {
 
     if (result?.error) {
       setError("Neplatný email nebo heslo");
+      setLoading(false);
     } else {
       router.push("/");
       router.refresh();
@@ -30,20 +33,33 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F2EF] flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
-        <div className="bg-white rounded-xl shadow-sm border border-[#E7E5E4] p-8">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Aurora mesh background */}
+      <div className="liquid-bg" aria-hidden />
+
+      <div className="w-full max-w-sm relative">
+        {/* Soft glow behind the glass card */}
+        <div
+          aria-hidden
+          className="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-[#6366F1]/25 via-[#A855F7]/15 to-[#FB923C]/20 blur-2xl"
+        />
+
+        <div className="glass-strong rounded-3xl p-8 relative">
           <div className="mb-8 text-center">
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6E70F5] to-[#8B5CF6] flex items-center justify-center text-white text-lg font-bold shadow-[0_8px_24px_-4px_rgba(99,102,241,0.5),inset_0_1px_2px_rgba(255,255,255,0.45)] mb-4">
+              CD
+            </div>
             <h1 className="text-2xl font-semibold text-[#1C1917]">CAN Desk</h1>
             <p className="text-sm text-[#78716C] mt-1">
               Interní projektový nástroj
             </p>
           </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-[#1C1917] mb-1"
+                className="block text-sm font-medium text-[#1C1917] mb-1.5"
               >
                 Email
               </label>
@@ -52,14 +68,15 @@ export default function LoginPage() {
                 name="email"
                 type="email"
                 required
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
+                autoComplete="email"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-sm text-[#1C1917] placeholder:text-[#A8A29E]"
                 placeholder="email@canagency.cz"
               />
             </div>
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-[#1C1917] mb-1"
+                className="block text-sm font-medium text-[#1C1917] mb-1.5"
               >
                 Heslo
               </label>
@@ -68,21 +85,24 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 required
-                className="w-full px-3 py-2 rounded-lg border border-[#E7E5E4] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent"
+                autoComplete="current-password"
+                className="w-full px-3.5 py-2.5 rounded-xl glass-input text-sm text-[#1C1917] placeholder:text-[#A8A29E]"
                 placeholder="••••••••"
               />
             </div>
             {error && (
-              <p className="text-sm text-red-500 text-center">{error}</p>
+              <p className="text-sm text-rose-500 text-center">{error}</p>
             )}
             <button
               type="submit"
-              className="w-full py-2 px-4 bg-[#6366F1] text-white rounded-lg text-sm font-medium hover:bg-[#4F46E5] transition-colors"
+              disabled={loading}
+              className="w-full py-2.5 px-4 btn-glass-primary text-white rounded-xl text-sm font-medium disabled:opacity-60"
             >
-              Přihlásit se
+              {loading ? "Přihlašuji…" : "Přihlásit se"}
             </button>
           </form>
-          <p className="mt-4 text-xs text-center text-[#78716C]">
+
+          <p className="mt-5 text-xs text-center text-[#A8A29E]">
             CAN Desk &mdash; Can Agency &copy; 2026
           </p>
         </div>
