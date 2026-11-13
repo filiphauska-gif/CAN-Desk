@@ -59,6 +59,7 @@ model User {
   timeEntries     TimeEntry[]
   comments        Comment[]
   accountProjects Project[]    @relation("AccountProjects")
+  dashboardLayout String?
 }
 
 model Client {
