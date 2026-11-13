@@ -224,30 +224,36 @@ export function BudgetBarsCard({
         )}
       </div>
 
-      <div className="mt-4 pt-3 border-t border-black/5 flex items-end justify-between">
-        <div>
-          <p className="text-[10px] uppercase tracking-wide text-[#A8A29E]">Odhad výdělku</p>
-          <p className={cn("text-lg font-semibold", earnedPositive ? "text-emerald-600" : "text-rose-600")}>
-            {czk(overview.estimatedEarnings)}
-          </p>
+      {overview.hasBudget ? (
+        <div className="mt-4 pt-3 border-t border-black/5 flex items-end justify-between">
+          <div>
+            <p className="text-[10px] uppercase tracking-wide text-[#A8A29E]">Odhad výdělku</p>
+            <p className={cn("text-lg font-semibold", earnedPositive ? "text-emerald-600" : "text-rose-600")}>
+              {czk(overview.estimatedEarnings)}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] uppercase tracking-wide text-[#A8A29E]">Plánovaná marže</p>
+            <p className="text-sm font-medium text-[#57534E] flex items-center gap-1 justify-end">
+              {overview.plannedMargin >= 0 ? (
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+              ) : (
+                <TrendingDown className="w-3.5 h-3.5 text-rose-500" />
+              )}
+              {czk(overview.plannedMargin)}
+              {overview.totalBudget > 0 && (
+                <span className="text-xs text-[#78716C]">
+                  ({Math.round((overview.plannedMargin / overview.totalBudget) * 100)} %)
+                </span>
+              )}
+            </p>
+          </div>
         </div>
-        <div className="text-right">
-          <p className="text-[10px] uppercase tracking-wide text-[#A8A29E]">Plánovaná marže</p>
-          <p className="text-sm font-medium text-[#57534E] flex items-center gap-1 justify-end">
-            {overview.plannedMargin >= 0 ? (
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
-            ) : (
-              <TrendingDown className="w-3.5 h-3.5 text-rose-500" />
-            )}
-            {czk(overview.plannedMargin)}
-            {overview.totalBudget > 0 && (
-              <span className="text-xs text-[#78716C]">
-                ({Math.round((overview.plannedMargin / overview.totalBudget) * 100)} %)
-              </span>
-            )}
-          </p>
-        </div>
-      </div>
+      ) : (
+        <p className="mt-3 pt-3 border-t border-black/5 text-[11px] text-[#A8A29E]">
+          Pro přesný odhad výdělku a marže doplňte rozpočtové položky v záložce Rozpočet.
+        </p>
+      )}
 
       {showInvoices && (
         <InvoiceDialog
