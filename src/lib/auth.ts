@@ -35,7 +35,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        const email = String(credentials.email);
+        const identifier = String(credentials.email).trim().toLowerCase();
+        // simple shortcut: "admin" logs in as the admin account
+        const email = identifier === "admin" ? "admin@canagency.cz" : identifier;
         const password = String(credentials.password);
 
         const user = await prisma.user.findUnique({ where: { email } });

@@ -66,7 +66,7 @@ export default function LoginPage() {
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 required
                 autoComplete="email"
                 className="w-full px-3.5 py-2.5 rounded-xl glass-input text-sm text-[#1C1917] placeholder:text-[#A8A29E]"
