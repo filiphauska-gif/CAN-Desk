@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import "gridstack/dist/gridstack.min.css";
 import { format } from "date-fns";
@@ -11,9 +11,7 @@ import {
   Clock,
   FolderKanban,
   GripVertical,
-  Pencil,
   RotateCcw,
-  Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProjectStatusBadge, TaskStatusBadge, PriorityBadge } from "@/components/shared/status-badges";
@@ -45,10 +43,44 @@ export type DashboardData = {
 };
 
 const GRID_EDIT_CSS = `
-  .dashboard-grid .widget-drag-handle { opacity: 0; pointer-events: none; transition: opacity .15s; }
-  .dashboard-grid.grid--edit .widget-drag-handle { opacity: 1; pointer-events: auto; cursor: grab; }
-  .dashboard-grid.grid--edit .grid-stack-item > .grid-stack-item-content { outline: 2px dashed rgba(99,102,241,.4); outline-offset: -2px; }
-  .dashboard-grid .grid-stack-item-content { overflow: hidden; border-radius: 0.75rem; background: transparent; }
+  /* Subtle drag grips — always available, clearer on hover */
+  .dashboard-grid .widget-drag-handle {
+    opacity: .3;
+    transition: opacity .2s ease, background-color .2s ease;
+    cursor: grab;
+  }
+  .dashboard-grid .widget-drag-handle:hover { opacity: 1; background: rgba(255,255,255,.6); }
+  .dashboard-grid .widget-drag-handle:active { cursor: grabbing; }
+
+  /* Smooth movement + resize during drag */
+  .dashboard-grid .grid-stack-item > .grid-stack-item-content {
+    overflow: hidden;
+    border-radius: .75rem;
+    background: transparent;
+    transition: box-shadow .25s ease;
+  }
+  .dashboard-grid.grid-stack-animate .grid-stack-item {
+    transition: left .28s cubic-bezier(.22,.82,.28,1), top .28s cubic-bezier(.22,.82,.28,1),
+                width .28s cubic-bezier(.22,.82,.28,1), height .28s cubic-bezier(.22,.82,.28,1);
+  }
+  .dashboard-grid .grid-stack-item:hover > .grid-stack-item-content {
+    box-shadow: 0 14px 34px -14px rgba(76,71,106,.22);
+  }
+
+  /* Resize corner — tiny corner grip, fades in on hover */
+  .dashboard-grid .ui-resizable-handle { opacity: 0; transition: opacity .2s ease; }
+  .dashboard-grid .grid-stack-item:hover .ui-resizable-se { opacity: 1; }
+  .dashboard-grid .ui-resizable-se {
+    width: 18px; height: 18px; right: 3px; bottom: 3px;
+    background: none; cursor: nwse-resize;
+  }
+  .dashboard-grid .ui-resizable-se::after {
+    content: ""; position: absolute; right: 3px; bottom: 3px;
+    width: 9px; height: 9px;
+    border-right: 2px solid rgba(99,102,241,.55);
+    border-bottom: 2px solid rgba(99,102,241,.55);
+    border-radius: 0 0 3px 0;
+  }
 `;
 
 /* ---------------- reusable widget shell ---------------- */
@@ -248,8 +280,6 @@ export function DashboardGrid({
 }) {
   const elRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<any>(null);
-  const editRef = useRef(false);
-  const [editMode, setEditMode] = useState(false);
 
   // Widgets are rendered once — React never re-touches the grid DOM afterwards.
   const widgets = useMemo(
@@ -291,8 +321,7 @@ export function DashboardGrid({
           cellHeight: 44,
           margin: 6,
           handle: ".widget-drag-handle",
-          disableDrag: true,
-          disableResize: true,
+          animate: true,
         },
         elRef.current
       );
@@ -307,7 +336,6 @@ export function DashboardGrid({
       }
 
       grid.on("change", () => {
-        if (!editRef.current) return;
         clearTimeout(timer);
         timer = setTimeout(() => {
           const layout = grid.save(false) as any[];
@@ -328,14 +356,6 @@ export function DashboardGrid({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function toggleEdit() {
-    const next = !editMode;
-    setEditMode(next);
-    editRef.current = next;
-    gridRef.current?.enableMove(next);
-    gridRef.current?.enableResize(next);
-  }
-
   async function handleReset() {
     await resetDashboardLayout();
     window.location.reload();
@@ -352,35 +372,18 @@ export function DashboardGrid({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {editMode && (
-            <button
-              onClick={handleReset}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-[#78716C] glass hover:bg-white/60"
-            >
-              <RotateCcw className="w-3.5 h-3.5" /> Obnovit výchozí
-            </button>
-          )}
           <button
-            onClick={toggleEdit}
-            className={cn(
-              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all",
-              editMode ? "btn-glass-primary text-white" : "glass text-[#57534E] hover:bg-white/60"
-            )}
+            onClick={handleReset}
+            title="Obnovit výchozí rozložení"
+            className="p-2 rounded-xl glass text-[#A8A29E] hover:text-[#57534E] hover:bg-white/60 transition-all duration-200"
           >
-            {editMode ? <Check className="w-3.5 h-3.5" /> : <Pencil className="w-3.5 h-3.5" />}
-            {editMode ? "Hotovo" : "Přizpůsobit"}
+            <RotateCcw className="w-4 h-4" />
           </button>
           {newProjectSlot}
         </div>
       </div>
 
-      {editMode && (
-        <p className="text-xs text-[#78716C] -mt-1">
-          Přetahuj okna za úchyt <GripVertical className="w-3 h-3 inline" /> v hlavičce, velikost měň tažením za pravý dolní roh. Rozložení se ukládá automaticky.
-        </p>
-      )}
-
-      <div className={cn("dashboard-grid grid-stack", editMode && "grid--edit")} ref={elRef}>
+      <div className="dashboard-grid grid-stack" ref={elRef}>
         {widgets}
       </div>
     </div>
