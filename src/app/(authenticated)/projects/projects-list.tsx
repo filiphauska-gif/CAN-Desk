@@ -32,7 +32,15 @@ export type ProjectListItem = {
 };
 
 /* ---------------- expanded panel ---------------- */
-function PeekPanel({ projectId, data }: { projectId: string; data: QuickView | undefined }) {
+function PeekPanel({
+  projectId,
+  data,
+  onToggle,
+}: {
+  projectId: string;
+  data: QuickView | undefined;
+  onToggle: () => void;
+}) {
   if (!data) {
     return (
       <div className="flex items-center justify-center py-10 text-[#78716C]">
@@ -107,12 +115,21 @@ function PeekPanel({ projectId, data }: { projectId: string; data: QuickView | u
           )}
           {data.project.accountName && <p>Account: {data.project.accountName}</p>}
         </div>
-        <Link
-          href={`/projects/${projectId}`}
-          className="btn-glass-primary w-full text-white text-sm font-medium rounded-xl px-4 py-2.5 flex items-center justify-center gap-2"
-        >
-          Otevřít zakázku <ArrowRight className="w-4 h-4" />
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href={`/projects/${projectId}`}
+            className="btn-glass-primary flex-1 text-white text-sm font-medium rounded-xl px-4 py-2.5 flex items-center justify-center gap-2"
+          >
+            Otevřít zakázku <ArrowRight className="w-4 h-4" />
+          </Link>
+          <button
+            onClick={onToggle}
+            title="Sbalit náhled"
+            className="glass rounded-xl px-3 flex items-center justify-center text-[#78716C] hover:text-[#6366F1] hover:bg-white/70 transition-all"
+          >
+            <ChevronDown className="w-4 h-4 rotate-180" />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -177,16 +194,16 @@ export function ProjectsList({ projects }: { projects: ProjectListItem[] }) {
               </div>
             </Link>
 
-            {/* Expand toggle - bottom right */}
-            <button
-              onClick={() => toggle(project.id)}
-              title={open ? "Sbalit náhled" : "Rozbalit náhled"}
-              className="absolute bottom-3 right-3 p-2 rounded-lg text-[#A8A29E] hover:text-[#6366F1] hover:bg-white/70 transition-all"
-            >
-              <ChevronDown
-                className={cn("w-4 h-4 transition-transform duration-300", open && "rotate-180")}
-              />
-            </button>
+            {/* Expand toggle - bottom right (only when collapsed) */}
+            {!open && (
+              <button
+                onClick={() => toggle(project.id)}
+                title="Rozbalit náhled"
+                className="absolute bottom-3 right-3 p-2 rounded-lg text-[#A8A29E] hover:text-[#6366F1] hover:bg-white/70 transition-all"
+              >
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            )}
 
             {/* Expandable panel */}
             <div
@@ -197,7 +214,11 @@ export function ProjectsList({ projects }: { projects: ProjectListItem[] }) {
             >
               <div className="overflow-hidden">
                 <div className="px-5 pb-5 border-t border-black/5">
-                  <PeekPanel projectId={project.id} data={cache[project.id]} />
+                  <PeekPanel
+                    projectId={project.id}
+                    data={cache[project.id]}
+                    onToggle={() => toggle(project.id)}
+                  />
                 </div>
               </div>
             </div>
