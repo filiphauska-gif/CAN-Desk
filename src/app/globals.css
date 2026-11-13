@@ -330,5 +330,4 @@
 }
 .page-enter {
   animation: page-enter 0.3s cubic-bezier(0.22, 0.82, 0.28, 1);
-  will-change: opacity, transform;
 }
