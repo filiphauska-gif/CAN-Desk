@@ -217,6 +217,42 @@ export async function duplicateProject(id: string) {
   return copy;
 }
 
+/** Create a brand new project from an existing one (project "template"). */
+export async function createProjectFromTemplate(
+  sourceId: string,
+  data: { name: string; clientId: string; accountId?: string; deadline?: Date; description?: string }
+) {
+  const session = await auth();
+  if (!session?.user) throw new Error("Unauthorized");
+
+  const copy = await duplicateProject(sourceId);
+
+  // template tasks should keep clean titles (no "(kopie)" suffix)
+  const tasks = await prisma.task.findMany({ where: { projectId: copy.id } });
+  await Promise.all(
+    tasks.map((t) =>
+      prisma.task.update({
+        where: { id: t.id },
+        data: { title: t.title.replace(/ \(kopie\)$/, "") },
+      })
+    )
+  );
+
+  const updated = await prisma.project.update({
+    where: { id: copy.id },
+    data: {
+      name: data.name,
+      clientId: data.clientId,
+      accountId: data.accountId || copy.accountId,
+      deadline: data.deadline ?? copy.deadline,
+      description: data.description ?? copy.description,
+    },
+  });
+
+  revalidatePath("/projects");
+  return updated;
+}
+
 export async function getProjectStatusCounts() {
   const statuses = await prisma.project.groupBy({
     by: ["status"],

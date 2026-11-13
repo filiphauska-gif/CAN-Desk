@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createProject } from "@/server/actions/projects";
+import { createProject, createProjectFromTemplate } from "@/server/actions/projects";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,11 +18,15 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [clients, setClients] = useState<{ id: string; name: string }[]>([]);
+  const [templates, setTemplates] = useState<{ id: string; name: string }[]>([]);
 
   async function loadClients() {
     const mod = await import("@/server/actions/clients");
     const data = await mod.getClients();
     setClients(data);
+    const pmod = await import("@/server/actions/projects");
+    const projects = await pmod.getProjects();
+    setTemplates(projects.map((p: any) => ({ id: p.id, name: p.name })));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -30,16 +34,21 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
     setLoading(true);
     const form = new FormData(e.currentTarget);
 
+    const payload = {
+      name: form.get("name") as string,
+      description: form.get("description") as string,
+      clientId: form.get("clientId") as string,
+      accountId: (form.get("accountId") as string) || undefined,
+      deadline: form.get("deadline") ? new Date(form.get("deadline") as string) : undefined,
+    };
+    const templateId = (form.get("templateId") as string) || "";
+
     try {
-      await createProject({
-        name: form.get("name") as string,
-        description: form.get("description") as string,
-        clientId: form.get("clientId") as string,
-        accountId: (form.get("accountId") as string) || undefined,
-        deadline: form.get("deadline")
-          ? new Date(form.get("deadline") as string)
-          : undefined,
-      });
+      if (templateId) {
+        await createProjectFromTemplate(templateId, payload);
+      } else {
+        await createProject(payload);
+      }
       setOpen(false);
       router.refresh();
     } catch (error) {
@@ -105,6 +114,25 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
                   </option>
                 ))}
             </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-[#1C1917] mb-1">
+              Šablona
+            </label>
+            <select
+              name="templateId"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
+            >
+              <option value="">Prázdná zakázka</option>
+              {templates.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-[#A8A29E] mt-1">
+              Ze šablony se zkopírují úkoly i rozpočet.
+            </p>
           </div>
           <div>
             <label className="block text-sm font-medium text-[#1C1917] mb-1">

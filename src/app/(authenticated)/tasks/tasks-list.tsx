@@ -38,6 +38,7 @@ export function TasksList({
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [quick, setQuick] = useState<"all" | "overdue" | "week">("all");
+  const [view, setView] = useState<"list" | "board">("list");
 
   const now = new Date();
   const q = query.trim().toLowerCase();
@@ -112,6 +113,20 @@ export function TasksList({
     router.refresh();
   }
 
+  // Kanban drag & drop
+  const boardColumns = ["BACKLOG", "TODO", "IN_PROGRESS", "WAITING", "REVIEW", "DONE"];
+
+  function onDragStart(e: React.DragEvent, taskId: string) {
+    e.dataTransfer.setData("text/plain", taskId);
+    e.dataTransfer.effectAllowed = "move";
+  }
+
+  function onDrop(e: React.DragEvent, status: string) {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    if (id) handleStatus(id, status);
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 justify-between flex-wrap">
@@ -141,6 +156,27 @@ export function TasksList({
                   quick === key
                     ? "btn-glass-primary text-white border-[#6366F1]"
                     : "bg-white border-white/40 text-[#78716C] hover:border-[#6366F1]"
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-1.5 border-l border-black/10 pl-2">
+            {(
+              [
+                ["list", "Seznam"],
+                ["board", "Board"],
+              ] as const
+            ).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setView(key)}
+                className={cn(
+                  "px-2.5 py-1.5 rounded-lg text-xs border transition-colors",
+                  view === key
+                    ? "bg-[#1C1917] text-white border-[#1C1917]"
+                    : "bg-white border-white/40 text-[#78716C] hover:border-[#1C1917]"
                 )}
               >
                 {label}
@@ -280,9 +316,69 @@ export function TasksList({
         </form>
       )}
 
-      <div className="glass rounded-xl">
-        <div className="divide-y divide-black/5">
-          {visible.map((task) => {
+      {view === "board" ? (
+        <div className="flex gap-3 overflow-x-auto pb-2 items-start">
+          {boardColumns.map((status) => {
+            const columnTasks = visible.filter((t) => t.status === status);
+            return (
+              <div
+                key={status}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => onDrop(e, status)}
+                className="glass rounded-xl p-3 w-[240px] shrink-0"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-semibold text-[#57534E]">{taskStatusLabels[status]}</p>
+                  <span className="text-[10px] text-[#A8A29E] bg-white/60 rounded-full px-1.5">
+                    {columnTasks.length}
+                  </span>
+                </div>
+                <div className="space-y-2 min-h-[70px]">
+                  {columnTasks.map((task) => (
+                    <div
+                      key={task.id}
+                      draggable
+                      onDragStart={(e) => onDragStart(e, task.id)}
+                      onClick={() => openEdit(task)}
+                      className="bg-white rounded-lg border border-black/5 p-2.5 cursor-grab active:cursor-grabbing hover:shadow-sm hover:border-[#6366F1]/30 transition-all"
+                      title="Přetáhni do jiného sloupce nebo klikni pro úpravu"
+                    >
+                      <p className="text-xs font-medium text-[#1C1917] leading-snug mb-1">
+                        {task.title}
+                      </p>
+                      <p className="text-[10px] text-[#78716C] truncate">{task.projectName}</p>
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span>
+                          {task.priority > 0 ? <PriorityBadge priority={task.priority} /> : null}
+                        </span>
+                        {task.deadline && (
+                          <span
+                            className={cn(
+                              "text-[10px]",
+                              task.status !== "DONE" &&
+                                isBefore(new Date(task.deadline), new Date())
+                                ? "text-rose-500 font-medium"
+                                : "text-[#A8A29E]"
+                            )}
+                          >
+                            {format(new Date(task.deadline), "d.M.")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {columnTasks.length === 0 && (
+                    <p className="text-[10px] text-[#D6D3D1] text-center py-4">Prázdné</p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="glass rounded-xl">
+          <div className="divide-y divide-black/5">
+            {visible.map((task) => {
             const overdue =
               task.deadline && task.status !== "DONE" && isBefore(new Date(task.deadline), new Date());
             return (
@@ -336,8 +432,9 @@ export function TasksList({
               <p className="text-[#78716C]">{q ? "Nic nenalezeno" : "Žádné úkoly"}</p>
             </div>
           )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

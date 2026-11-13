@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { cs } from "date-fns/locale";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, User, Building2, Wallet } from "lucide-react";
+import { ArrowLeft, Calendar, User, Building2, Wallet, AlertTriangle } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { ProjectDetailTabs } from "./project-detail-tabs";
 import { ProjectStatusSwitcher } from "@/components/shared/project-status-switcher";
@@ -64,6 +64,36 @@ export default async function ProjectDetailPage({
     workedHours: financeOverview.workedHours,
     plannedHours: financeOverview.plannedHours,
   });
+
+  // Money / time burn warnings + invoicing nudge
+  const warnings: { text: string; level: "warn" | "risk" }[] = [];
+  const hoursPct =
+    financeOverview.plannedHours > 0
+      ? (financeOverview.workedHours / financeOverview.plannedHours) * 100
+      : 0;
+  if (hoursPct >= 100) {
+    warnings.push({
+      text: `Plánované hodiny vyčerpány na ${Math.round(hoursPct)} % (${financeOverview.workedHours} z ${financeOverview.plannedHours} h).`,
+      level: "risk",
+    });
+  } else if (hoursPct >= 80) {
+    warnings.push({
+      text: `Blíží se vyčerpání hodin: ${Math.round(hoursPct)} % (${financeOverview.workedHours} z ${financeOverview.plannedHours} h).`,
+      level: "warn",
+    });
+  }
+  const invoicedPct =
+    financeOverview.totalBudget > 0
+      ? (financeOverview.invoiced / financeOverview.totalBudget) * 100
+      : 0;
+  if (hoursPct >= 70 && invoicedPct < 40) {
+    warnings.push({
+      text: `Odpracováno ${Math.round(hoursPct)} % hodin, ale vyfakturováno jen ${Math.round(
+        invoicedPct
+      )} % rozpočtu. Zvažte vystavení faktury.`,
+      level: "warn",
+    });
+  }
 
   return (
     <div className="space-y-6">
@@ -137,6 +167,31 @@ export default async function ProjectDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Burn / invoicing warnings */}
+      {warnings.length > 0 && (
+        <div
+          className={
+            "glass rounded-xl p-4 space-y-1.5 border-l-4 " +
+            (warnings.some((w) => w.level === "risk")
+              ? "border-l-rose-500"
+              : "border-l-amber-400")
+          }
+        >
+          {warnings.map((w, i) => (
+            <p
+              key={i}
+              className={
+                "text-sm flex items-start gap-2 " +
+                (w.level === "risk" ? "text-rose-600" : "text-amber-700")
+              }
+            >
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+              {w.text}
+            </p>
+          ))}
+        </div>
+      )}
 
       {/* Description / Brief */}
       {project.description && (
