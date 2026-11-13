@@ -6,9 +6,8 @@ import { auth } from "@/lib/auth";
 
 // GENERATE DOCUMENT NUMBER
 async function generateDocumentNumber(): Promise<string> {
-  const count = await prisma.budgetDocument.count();
-  const year = new Date().getFullYear();
-  return `N-${year}-${String(count + 1).padStart(4, "0")}`;
+  const { nextNumber } = await import("@/lib/numbering");
+  return nextNumber("CE");
 }
 
 // CALCULATE LINE
