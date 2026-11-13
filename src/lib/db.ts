@@ -22,6 +22,8 @@ function createPrismaClient() {
     const schema = new URL(dbUrl!).searchParams.get("schema") || "public";
     const pool = new Pool({
       connectionString: dbUrl,
+      max: 3,
+      idleTimeoutMillis: 10_000,
       ssl: dbUrl!.includes("sslmode=disable") ? false : { rejectUnauthorized: false },
     });
     return new PrismaClient({ adapter: new PrismaPg(pool, { schema }) });
