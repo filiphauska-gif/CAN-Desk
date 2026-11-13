@@ -243,6 +243,25 @@
   outline: none;
 }
 
+/* Form controls inside glass panels must always look active (not disabled) */
+.glass input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+.glass select,
+.glass textarea,
+.glass-strong input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+.glass-strong select,
+.glass-strong textarea {
+  background-color: #ffffff;
+  border-color: rgba(28, 25, 23, 0.14);
+  color: #1c1917;
+}
+
+.glass input::placeholder,
+.glass textarea::placeholder,
+.glass-strong input::placeholder,
+.glass-strong textarea::placeholder {
+  color: #a8a29e;
+}
+
 /* ---- Glass overlays: dialogs, popovers, selects, dropdowns ---- */
 [data-slot="dialog-content"],
 [data-slot="popover-content"],

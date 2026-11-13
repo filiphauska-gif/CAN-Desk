@@ -52,10 +52,8 @@ export default async function ProjectDetailPage({
     orderBy: { name: "asc" },
   });
 
-  // Budget shown in header must match the budget picture: document wins over the plain project field
-  const headerBudget = financeOverview.hasBudget
-    ? financeOverview.totalBudget
-    : project.budgetAmount;
+  // Show only the true budget from the Rozpočet tab (budget document)
+  const headerBudget = financeOverview.hasBudget ? financeOverview.totalBudget : null;
 
   const health = projectHealth({
     status: project.status,
@@ -134,11 +132,6 @@ export default async function ProjectDetailPage({
               <span className="flex items-center gap-1">
                 <Wallet className="w-3 h-3" />
                 Rozpočet: {headerBudget.toLocaleString("cs-CZ")} Kč
-                {financeOverview.hasBudget && project.budgetAmount && project.budgetAmount !== headerBudget && (
-                  <span className="text-[#A8A29E]">
-                    (karta: {project.budgetAmount.toLocaleString("cs-CZ")} Kč)
-                  </span>
-                )}
               </span>
             ) : null}
           </div>

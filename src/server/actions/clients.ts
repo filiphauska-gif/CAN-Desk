@@ -8,7 +8,13 @@ export async function getClients() {
   return prisma.client.findMany({
     where: { active: true },
     orderBy: { name: "asc" },
-    include: { _count: { select: { projects: true } } },
+    include: {
+      _count: { select: { projects: true } },
+      projects: {
+        select: { id: true, name: true, status: true, deadline: true },
+        orderBy: { createdAt: "desc" },
+      },
+    },
   });
 }
 

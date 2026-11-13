@@ -30,8 +30,6 @@ export function ProjectEditDialog({
         clientId: form.get("clientId") as string,
         accountId: (form.get("accountId") as string) || undefined,
         deadline: form.get("deadline") ? new Date(form.get("deadline") as string) : null,
-        budgetAmount: form.get("budgetAmount") ? Number(form.get("budgetAmount")) : null,
-        budgetHours: form.get("budgetHours") ? Number(form.get("budgetHours")) : null,
         description: (form.get("description") as string) || undefined,
       });
       setOpen(false);
@@ -111,34 +109,14 @@ export function ProjectEditDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <label className="block text-xs text-[#78716C] mb-1">Deadline</label>
-                <input
-                  name="deadline"
-                  type="date"
-                  defaultValue={fmtDate(project.deadline)}
-                  className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-[#78716C] mb-1">Rozpočet (Kč)</label>
-                <input
-                  name="budgetAmount"
-                  type="number"
-                  defaultValue={project.budgetAmount ?? ""}
-                  className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-[#78716C] mb-1">Hodiny</label>
-                <input
-                  name="budgetHours"
-                  type="number"
-                  defaultValue={project.budgetHours ?? ""}
-                  className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
-                />
-              </div>
+            <div>
+              <label className="block text-xs text-[#78716C] mb-1">Deadline</label>
+              <input
+                name="deadline"
+                type="date"
+                defaultValue={fmtDate(project.deadline)}
+                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm"
+              />
             </div>
 
             <div>

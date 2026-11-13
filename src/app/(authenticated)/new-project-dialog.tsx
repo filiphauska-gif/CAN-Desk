@@ -39,12 +39,6 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
         deadline: form.get("deadline")
           ? new Date(form.get("deadline") as string)
           : undefined,
-        budgetAmount: form.get("budgetAmount")
-          ? Number(form.get("budgetAmount"))
-          : undefined,
-        budgetHours: form.get("budgetHours")
-          ? Number(form.get("budgetHours"))
-          : undefined,
       });
       setOpen(false);
       router.refresh();
@@ -112,29 +106,19 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
                 ))}
             </select>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[#1C1917] mb-1">
-                Deadline
-              </label>
-              <input
-                name="deadline"
-                type="date"
-                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#1C1917] mb-1">
-                Rozpočet (Kč)
-              </label>
-              <input
-                name="budgetAmount"
-                type="number"
-                className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
-                placeholder="Např. 850000"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-[#1C1917] mb-1">
+              Deadline
+            </label>
+            <input
+              name="deadline"
+              type="date"
+              className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+            />
           </div>
+          <p className="text-xs text-[#A8A29E]">
+            Rozpočet a hodiny se zadávají až v detailu zakázky, v záložce Rozpočet.
+          </p>
           <div>
             <label className="block text-sm font-medium text-[#1C1917] mb-1">
               Popis / brief
