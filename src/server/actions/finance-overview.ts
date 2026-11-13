@@ -61,7 +61,7 @@ function num(v: any) {
 
 /** Core math: budget vs reality for one project */
 export async function getProjectFinanceOverview(projectId: string): Promise<FinanceOverview> {
-  const [doc, timeAgg, costs, invoices] = await Promise.all([
+  const [doc, timeAgg, costs, invoices, project] = await Promise.all([
     prisma.budgetDocument.findFirst({
       where: { projectId, status: { notIn: ["ARCHIVOVANO"] } },
       include: { lines: true },
@@ -73,6 +73,18 @@ export async function getProjectFinanceOverview(projectId: string): Promise<Fina
     }),
     prisma.cost.aggregate({ where: { projectId }, _sum: { amount: true } }),
     prisma.invoice.findMany({ where: { projectId }, orderBy: { date: "desc" } }),
+    prisma.project.findUnique({
+      where: { id: projectId },
+      select: {
+        budgetAmount: true,
+        budgetHours: true,
+        tasks: {
+          select: {
+            assignments: { select: { user: { select: { hourlyRate: true } } } },
+          },
+        },
+      },
+    }),
   ]);
 
   // Flatten lines (children too)
@@ -98,7 +110,23 @@ export async function getProjectFinanceOverview(projectId: string): Promise<Fina
   totalBudget -= num(doc?.discountAmount);
   if (totalBudget < 0) totalBudget = 0;
 
-  const internalHourlyCost = plannedHours > 0 ? internalCostWeighted / plannedHours : 0;
+  // Fallback when the project has no budget document yet: use project-level budget
+  if (lines.length === 0) {
+    totalBudget = num(project?.budgetAmount);
+    plannedHours = num(project?.budgetHours);
+  }
+
+  let internalHourlyCost = plannedHours > 0 ? internalCostWeighted / plannedHours : 0;
+  if (internalHourlyCost === 0) {
+    // derive from assigned team: internal cost = 50% of client hourly rate
+    const rates = (project?.tasks || [])
+      .flatMap((t) => t.assignments.map((a) => num(a.user.hourlyRate)))
+      .filter((r) => r > 0);
+    if (rates.length > 0) {
+      internalHourlyCost = (rates.reduce((s, r) => s + r, 0) / rates.length) * 0.5;
+    }
+  }
+
   const workedHours = num(timeAgg._sum.hours);
   const receivedCosts = num(costs._sum.amount);
   const invoiced = invoices.filter((i) => i.type === "ISSUED").reduce((s, i) => s + num(i.amount), 0);
