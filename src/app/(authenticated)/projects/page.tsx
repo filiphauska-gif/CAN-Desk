@@ -29,7 +29,7 @@ export default async function ProjectsPage({
   };
   const projects = await getProjects(filters);
   const clients = await getClients();
-  const [users, overdueGroup, hoursGroup] = await Promise.all([
+  const [users, overdueGroup, hoursGroup, budgetDocs] = await Promise.all([
     prisma.user.findMany({
       where: { active: true },
       select: { id: true, name: true, role: true },
@@ -44,9 +44,21 @@ export default async function ProjectsPage({
       where: { entryType: "WORK" },
       _sum: { hours: true },
     }),
+    prisma.budgetDocument.findMany({
+      where: { projectId: { not: null }, status: { notIn: ["ARCHIVOVANO"] } },
+      select: { projectId: true, discountAmount: true, lines: { select: { totalExclVat: true } } },
+    }),
   ]);
   const overdueByProject = Object.fromEntries(overdueGroup.map((g) => [g.projectId, g._count.id]));
   const hoursByProject = Object.fromEntries(hoursGroup.map((g) => [g.projectId, g._sum.hours || 0]));
+  // true budget = sum of budget document lines (source of truth), not the legacy project field
+  const budgetByProject: Record<string, number> = {};
+  for (const doc of budgetDocs) {
+    if (!doc.projectId) continue;
+    const net =
+      doc.lines.reduce((s, l) => s + (l.totalExclVat || 0), 0) - (doc.discountAmount || 0);
+    budgetByProject[doc.projectId] = Math.max(0, net);
+  }
 
   return (
     <div className="space-y-6">
@@ -79,7 +91,7 @@ export default async function ProjectsPage({
             clientName: p.client.name,
             accountName: p.account?.name ?? null,
             deadline: p.deadline ? new Date(p.deadline).toISOString() : null,
-            budgetAmount: p.budgetAmount ?? null,
+            budgetAmount: budgetByProject[p.id] ?? null,
             description: p.description ?? null,
             tasksCount: p._count.tasks,
             timeCount: p._count.timeEntries,
