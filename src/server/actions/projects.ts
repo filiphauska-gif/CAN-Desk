@@ -111,6 +111,112 @@ export async function updateProject(
   return project;
 }
 
+export async function duplicateProject(id: string) {
+  const session = await auth();
+  if (!session?.user) throw new Error("Unauthorized");
+
+  const source = await prisma.project.findUnique({
+    where: { id },
+    include: {
+      tasks: { include: { assignments: true } },
+      budgetDocuments: {
+        where: { status: { notIn: ["ARCHIVOVANO"] } },
+        include: { lines: true },
+        orderBy: { createdAt: "desc" },
+        take: 1,
+      },
+    },
+  });
+  if (!source) throw new Error("Zakázka nenalezena");
+
+  const copy = await prisma.project.create({
+    data: {
+      name: `${source.name} (kopie)`,
+      description: source.description,
+      status: "NOVY",
+      clientId: source.clientId,
+      accountId: source.accountId,
+      deadline: source.deadline,
+      budgetAmount: source.budgetAmount,
+      budgetHours: source.budgetHours,
+    },
+  });
+
+  for (const t of source.tasks) {
+    await prisma.task.create({
+      data: {
+        title: `${t.title} (kopie)`,
+        description: t.description,
+        status: "TODO",
+        priority: t.priority,
+        projectId: copy.id,
+        deadline: t.deadline,
+        estimatedHours: t.estimatedHours,
+        assignments: t.assignments.length
+          ? { create: t.assignments.map((a) => ({ userId: a.userId })) }
+          : undefined,
+      },
+    });
+  }
+
+  // copy the latest budget document with its lines
+  const doc = source.budgetDocuments[0];
+  if (doc) {
+    await prisma.budgetDocument.create({
+      data: {
+        documentNumber: `${doc.documentNumber}-K${Date.now().toString().slice(-4)}`,
+        title: `${doc.title} (kopie)`,
+        type: doc.type,
+        clientId: doc.clientId,
+        projectId: copy.id,
+        currency: doc.currency,
+        ownerId: doc.ownerId,
+        status: "ROZPRACOVANO",
+        clientStatus: "ROZPRACOVANO",
+        discountPercent: doc.discountPercent,
+        discountAmount: doc.discountAmount,
+        lines: {
+          create: doc.lines.map((l) => ({
+            type: l.type,
+            code: l.code,
+            subject: l.subject,
+            clientDescription: l.clientDescription,
+            internalDescription: l.internalDescription,
+            quantity: l.quantity,
+            unit: l.unit,
+            unitCost: l.unitCost,
+            totalCost: l.totalCost,
+            markupUnit: l.markupUnit,
+            markupPercent: l.markupPercent,
+            unitPrice: l.unitPrice,
+            hourlyRate: l.hourlyRate,
+            internalHourlyCost: l.internalHourlyCost,
+            plannedHours: l.plannedHours,
+            totalExclVat: l.totalExclVat,
+            vatRate: l.vatRate,
+            vatAmount: l.vatAmount,
+            totalInclVat: l.totalInclVat,
+            discountPercent: l.discountPercent,
+            discountAmount: l.discountAmount,
+            plannedMargin: l.plannedMargin,
+            plannedMarginPercent: l.plannedMarginPercent,
+            supplier: l.supplier,
+            deadline: l.deadline,
+            isPrintable: l.isPrintable,
+            isInternalOnly: l.isInternalOnly,
+            sortOrder: l.sortOrder,
+            category: l.category,
+          })),
+        },
+      },
+    });
+  }
+
+  revalidatePath("/projects");
+  revalidatePath("/finance");
+  return copy;
+}
+
 export async function getProjectStatusCounts() {
   const statuses = await prisma.project.groupBy({
     by: ["status"],

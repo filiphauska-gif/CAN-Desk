@@ -13,6 +13,7 @@ import { ProjectStatusSwitcher } from "@/components/shared/project-status-switch
 import { getBudgetByProject } from "@/server/actions/budget-new";
 import { getProjectFinanceOverview } from "@/server/actions/finance-overview";
 import { ProjectEditDialog } from "./project-edit-dialog";
+import { DuplicateProjectButton } from "./duplicate-project-button";
 import { projectHealth } from "@/lib/project-health";
 
 export default async function ProjectDetailPage({
@@ -86,11 +87,14 @@ export default async function ProjectDetailPage({
               currentStatus={project.status}
             />
             {canEdit && (
-              <ProjectEditDialog
-                project={project}
-                clients={clients}
-                users={projectUsers}
-              />
+              <>
+                <ProjectEditDialog
+                  project={project}
+                  clients={clients}
+                  users={projectUsers}
+                />
+                <DuplicateProjectButton projectId={id} />
+              </>
             )}
             <span
               title={health.detail || health.label}
