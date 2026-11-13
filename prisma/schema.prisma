@@ -108,6 +108,7 @@ model Project {
   budgetItems BudgetItem[]
   budgetDocuments BudgetDocument[]
   orders          Order[]
+  attachments     Attachment[]
 }
 
 model BudgetDocument {
@@ -201,6 +202,7 @@ model Task {
 
   timeEntries TimeEntry[]
   assignments TaskAssignment[]
+  attachments Attachment[]
 }
 
 model TaskAssignment {
@@ -327,4 +329,18 @@ model OrderItem {
 model Counter {
   key   String @id
   value Int    @default(0)
+}
+
+model Attachment {
+  id           String   @id @default(cuid())
+  name         String
+  mime         String
+  size         Int
+  data         Bytes
+  projectId    String?
+  project      Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  taskId       String?
+  task         Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  uploadedById String?
+  createdAt    DateTime @default(now())
 }

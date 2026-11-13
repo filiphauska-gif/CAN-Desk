@@ -60,6 +60,12 @@ export default async function ProjectDetailPage({
     }),
   ]);
 
+  const attachments = await prisma.attachment.findMany({
+    where: { projectId: id },
+    select: { id: true, name: true, mime: true, size: true, createdAt: true },
+    orderBy: { createdAt: "desc" },
+  });
+
   const clients = await prisma.client.findMany({
     select: { id: true, name: true },
     orderBy: { name: "asc" },
@@ -230,6 +236,7 @@ export default async function ProjectDetailPage({
           date: i.date.toISOString(),
           dueDate: i.dueDate ? i.dueDate.toISOString() : null,
         }))}
+        files={attachments.map((a) => ({ ...a, createdAt: a.createdAt.toISOString() }))}
         orders={orders.map((o) => ({
           ...o,
           date: o.date.toISOString(),

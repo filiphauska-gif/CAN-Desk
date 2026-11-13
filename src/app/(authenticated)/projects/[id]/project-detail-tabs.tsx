@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Wallet, Receipt, Clock, MessageSquare, CheckSquare, FileText, Package } from "lucide-react";
+import { Wallet, Receipt, Clock, MessageSquare, CheckSquare, FileText, Package, Paperclip } from "lucide-react";
 import { ProjectTasksTab } from "./tabs/project-tasks-tab";
 import { ProjectTimeTab } from "./tabs/project-time-tab";
 import { ProjectBudgetNewTab } from "./tabs/budget/index";
@@ -12,6 +12,7 @@ import { ProjectFinanceTab } from "./tabs/project-finance-tab";
 import { ProjectCommentsTab } from "./tabs/project-comments-tab";
 import { BudgetBarsCard } from "@/components/shared/budget-bars";
 import { ProjectInvoicesTab, ProjectOrdersTab } from "./tabs/project-documents-tabs";
+import { ProjectFilesTab } from "./tabs/project-files-tab";
 
 const tabs = [
   { id: "prehled", label: "Přehled", icon: Wallet },
@@ -21,6 +22,7 @@ const tabs = [
   { id: "faktury", label: "Faktury", icon: FileText },
   { id: "objednavky", label: "Objednávky", icon: Package },
   { id: "naklady", label: "Náklady", icon: Wallet },
+  { id: "soubory", label: "Soubory", icon: Paperclip },
   { id: "komentare", label: "Komentáře", icon: MessageSquare },
 ];
 
@@ -37,6 +39,7 @@ export function ProjectDetailTabs({
   financeOverview,
   invoices,
   orders,
+  files,
 }: {
   projectId: string;
   activeTab: string;
@@ -50,6 +53,7 @@ export function ProjectDetailTabs({
   financeOverview: any;
   invoices: any[];
   orders: any[];
+  files: any[];
 }) {
   const pathname = usePathname();
 
@@ -226,6 +230,7 @@ export function ProjectDetailTabs({
         {activeTab === "objednavky" && (
           <ProjectOrdersTab projectId={projectId} orders={orders} canEdit={canEdit} />
         )}
+        {activeTab === "soubory" && <ProjectFilesTab projectId={projectId} files={files} canEdit={canEdit} />}
         {activeTab === "komentare" && <ProjectCommentsTab projectId={projectId} comments={project.comments} userId={user.id} />}
       </div>
     </div>
