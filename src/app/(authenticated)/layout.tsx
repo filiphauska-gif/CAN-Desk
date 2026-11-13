@@ -17,7 +17,9 @@ export default async function AuthenticatedLayout({
       <div className="liquid-bg" aria-hidden />
       <Sidebar />
       <main className="flex-1 min-w-0 p-4 lg:py-6 lg:pr-6 lg:pl-3 pt-16 overflow-auto">
-        <PageTransition>{children}</PageTransition>
+        <div className="max-w-[1440px] mx-auto w-full">
+          <PageTransition>{children}</PageTransition>
+        </div>
       </main>
     </div>
   );

@@ -42,9 +42,13 @@ export type DashboardData = {
 };
 
 const GRID_EDIT_CSS = `
-  /* Title-bar dragging — like a Windows window, no visible grip */
-  .dashboard-grid .widget-titlebar { cursor: grab; }
-  .dashboard-grid .widget-titlebar:active { cursor: grabbing; }
+  /* Custom cursors with dark outline — visible on white glass */
+  .dashboard-grid .widget-titlebar {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' stroke='%231C1917' stroke-width='1.8' stroke-linejoin='round' d='M23 5.5V20c0 2.2-1.8 4-4 4h-7.3c-1.08 0-2.1-.43-2.85-1.19L1 14.83s1.26-1.23 1.3-1.25c.22-.19.49-.29.79-.29.22 0 .42.06.6.16.04.01 4.31 2.46 4.31 2.46V4c0-.83.67-1.5 1.5-1.5S11 3.17 11 4v7h1V1.5c0-.83.67-1.5 1.5-1.5S15 .67 15 1.5V11h1V2.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V11h1V5.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5z'/%3E%3C/svg%3E") 15 15, grab;
+  }
+  .dashboard-grid .widget-titlebar:active {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' stroke='%231C1917' stroke-width='1.8' stroke-linejoin='round' d='M23 5.5V20c0 2.2-1.8 4-4 4h-7.3c-1.08 0-2.1-.43-2.85-1.19L1 14.83s1.26-1.23 1.3-1.25c.22-.19.49-.29.79-.29.22 0 .42.06.6.16.04.01 4.31 2.46 4.31 2.46V4c0-.83.67-1.5 1.5-1.5S11 3.17 11 4v7h1V1.5c0-.83.67-1.5 1.5-1.5S15 .67 15 1.5V11h1V2.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V11h1V5.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5z'/%3E%3C/svg%3E") 15 15, grabbing;
+  }
 
   /* Smooth movement + resize */
   .dashboard-grid .grid-stack-item > .grid-stack-item-content {
@@ -61,17 +65,29 @@ const GRID_EDIT_CSS = `
     box-shadow: 0 14px 34px -14px rgba(76,71,106,.22);
   }
 
-  /* Invisible resize hit-zones — cursor changes on hover, like window edges */
+  /* Invisible resize hit-zones — custom outlined cursors on hover */
   .dashboard-grid .ui-resizable-handle {
     opacity: 0 !important;
     background: none !important;
     background-image: none !important;
   }
-  .dashboard-grid .ui-resizable-e  { width: 10px;  right: 0;  top: 6px; bottom: 6px; cursor: ew-resize; }
-  .dashboard-grid .ui-resizable-w  { width: 10px;  left: 0;   top: 6px; bottom: 6px; cursor: ew-resize; }
-  .dashboard-grid .ui-resizable-s  { height: 10px; bottom: 0; left: 6px; right: 6px; cursor: ns-resize; }
-  .dashboard-grid .ui-resizable-se { width: 18px;  height: 18px; right: 0; bottom: 0; cursor: nwse-resize; }
-  .dashboard-grid .ui-resizable-sw { width: 18px;  height: 18px; left: 0;  bottom: 0; cursor: nesw-resize; }
+  .dashboard-grid .ui-resizable-e  { width: 10px;  right: 0;  top: 6px; bottom: 6px; }
+  .dashboard-grid .ui-resizable-w  { width: 10px;  left: 0;   top: 6px; bottom: 6px; }
+  .dashboard-grid .ui-resizable-s  { height: 10px; bottom: 0; left: 6px; right: 6px; }
+  .dashboard-grid .ui-resizable-se { width: 18px;  height: 18px; right: 0; bottom: 0; }
+  .dashboard-grid .ui-resizable-sw { width: 18px;  height: 18px; left: 0;  bottom: 0; }
+  .dashboard-grid .ui-resizable-e, .dashboard-grid .ui-resizable-w {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 28 28'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='%23fff' stroke-width='5' d='M4 14h20M4 14l5-5M4 14l5 5M24 14l-5-5M24 14l-5 5'/%3E%3Cpath stroke='%231C1917' stroke-width='1.8' d='M4 14h20M4 14l5-5M4 14l5 5M24 14l-5-5M24 14l-5 5'/%3E%3C/g%3E%3C/svg%3E") 14 14, ew-resize;
+  }
+  .dashboard-grid .ui-resizable-s {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 28 28'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='%23fff' stroke-width='5' d='M14 4v20M14 4l-5 5M14 4l5 5M14 24l-5-5M14 24l5-5'/%3E%3Cpath stroke='%231C1917' stroke-width='1.8' d='M14 4v20M14 4l-5 5M14 4l5 5M14 24l-5-5M14 24l5-5'/%3E%3C/g%3E%3C/svg%3E") 14 14, ns-resize;
+  }
+  .dashboard-grid .ui-resizable-se {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 28 28'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='%23fff' stroke-width='5' d='M6 6l16 16M6 6v6M6 6h6M22 22h-6M22 22v-6'/%3E%3Cpath stroke='%231C1917' stroke-width='1.8' d='M6 6l16 16M6 6v6M6 6h6M22 22h-6M22 22v-6'/%3E%3C/g%3E%3C/svg%3E") 14 14, nwse-resize;
+  }
+  .dashboard-grid .ui-resizable-sw {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 28 28'%3E%3Cg fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='%23fff' stroke-width='5' d='M22 6L6 22M22 6h-6M22 6v6M6 22h6M6 22v-6'/%3E%3Cpath stroke='%231C1917' stroke-width='1.8' d='M22 6L6 22M22 6h-6M22 6v6M6 22h6M6 22v-6'/%3E%3C/g%3E%3C/svg%3E") 14 14, nesw-resize;
+  }
 `;
 
 /* ---------------- reusable widget shell ---------------- */
@@ -280,7 +296,7 @@ export function DashboardGrid({
         <div className="grid-stack-item" gs-id="projects" gs-x="6" gs-y="3" gs-w="6" gs-h="7" gs-min-w="3" gs-min-h="3">
           <div className="grid-stack-item-content"><ProjectsWidget d={data} /></div>
         </div>
-        <div className="grid-stack-item" gs-id="recent" gs-x="0" gs-y="10" gs-w="6" gs-h="6" gs-min-w="3" gs-min-h="3">
+        <div className="grid-stack-item" gs-id="recent" gs-x="0" gs-y="10" gs-w="6" gs-h="7" gs-min-w="3" gs-min-h="3">
           <div className="grid-stack-item-content"><RecentWidget d={data} /></div>
         </div>
         <div className="grid-stack-item" gs-id="status" gs-x="6" gs-y="10" gs-w="6" gs-h="7" gs-min-w="3" gs-min-h="3">
