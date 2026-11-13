@@ -1,1 +1,0 @@
-postgresql://can_desk.xihiswgdwiardhexgbva:Kv7%23pR2mXw9!tLz4@aws-0-eu-west-1.pooler.supabase.com:5432/postgres?schema=can_desk
