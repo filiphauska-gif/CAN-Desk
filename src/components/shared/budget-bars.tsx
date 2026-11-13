@@ -190,7 +190,7 @@ export function BudgetBarsCard({
   const [showInvoices, setShowInvoices] = useState(false);
   const earnedPositive = overview.estimatedEarnings >= 0;
 
-  if (!overview.hasBudget) {
+  if (overview.bars.length === 0) {
     return (
       <div className="glass rounded-xl p-4">
         <div className="flex items-center justify-between">
