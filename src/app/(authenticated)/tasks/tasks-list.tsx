@@ -6,6 +6,7 @@ import { format, isBefore, addDays } from "date-fns";
 import { Plus, Pencil, Trash2, X, CheckSquare, Search } from "lucide-react";
 import { PriorityBadge, taskStatusLabels } from "@/components/shared/status-badges";
 import { createTask, updateTask, updateTaskAssignments, deleteTask } from "@/server/actions/tasks";
+import { uploadTaskFiles, deleteAttachment } from "@/server/actions/files";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +22,7 @@ type TaskRow = {
   projectName: string;
   clientName: string | null;
   assignees: { id: string; name: string }[];
+  attachments?: { id: string; name: string; size: number }[];
 };
 
 export function TasksList({
@@ -101,6 +103,16 @@ export function TasksList({
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleTaskUpload(taskId: string, e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const fd = new FormData();
+    Array.from(files).forEach((fl) => fd.append("files", fl));
+    await uploadTaskFiles(taskId, fd);
+    e.target.value = "";
+    router.refresh();
   }
 
   async function handleStatus(taskId: string, status: string) {
@@ -305,6 +317,20 @@ export function TasksList({
             </div>
           </div>
 
+          {editing && (
+            <div>
+              <label className="block text-xs text-[#78716C] mb-1">Přílohy</label>
+              <div className="space-y-1.5">
+                {(editing.attachments || []).map((a) => (
+                  <div key={a.id} className="flex items-center gap-2 text-xs text-[#1C1917]">
+                    <a href={`/api/files/${a.id}`} className="text-[#6366F1] hover:underline truncate flex-1">{a.name}</a>
+                    <button type="button" onClick={async () => { await deleteAttachment(a.id); router.refresh(); }} className="text-[#A8A29E] hover:text-rose-500">✕</button>
+                  </div>
+                ))}
+                <input type="file" multiple onChange={(e) => handleTaskUpload(editing.id, e)} className="text-xs" />
+              </div>
+            </div>
+          )}
           <div className="flex gap-2 justify-end">
             <Button type="button" variant="outline" size="sm" onClick={() => setFormOpen(false)}>
               Zrušit

@@ -24,6 +24,7 @@ export async function getTasks(filters?: {
       project: { select: { id: true, name: true, client: { select: { name: true } } } },
       assignee: { select: { id: true, name: true } },
       assignments: { include: { user: { select: { id: true, name: true } } } },
+      attachments: { select: { id: true, name: true, size: true } },
     },
     orderBy: [{ priority: "desc" }, { deadline: "asc" }],
   });
@@ -130,6 +131,7 @@ export async function getMyTasks(userId: string) {
       project: { select: { id: true, name: true, client: { select: { name: true } } } },
       assignee: { select: { id: true, name: true } },
       assignments: { include: { user: { select: { id: true, name: true } } } },
+      attachments: { select: { id: true, name: true, size: true } },
     },
     orderBy: [{ priority: "desc" }, { deadline: "asc" }],
     take: 20,

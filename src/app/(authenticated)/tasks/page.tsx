@@ -50,6 +50,7 @@ export default async function TasksPage({
     projectName: t.project?.name || "",
     clientName: t.project?.client?.name || null,
     assignees: (t.assignments || []).map((a: any) => ({ id: a.user.id, name: a.user.name })),
+    attachments: (t.attachments || []).map((a: any) => ({ id: a.id, name: a.name, size: a.size })),
   }));
 
   return (

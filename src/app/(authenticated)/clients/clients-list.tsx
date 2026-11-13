@@ -73,13 +73,13 @@ export function ClientsList({ clients }: { clients: ClientListItem[] }) {
             </Link>
 
             {/* Expand toggle */}
-            <button
+            {!open && <button
               onClick={() => setOpenId(open ? null : client.id)}
               title={open ? "Sbalit náhled" : "Rozbalit náhled"}
               className="absolute bottom-3 right-3 p-2 rounded-lg text-[#A8A29E] hover:text-[#6366F1] hover:bg-white/70 transition-all"
             >
               <ChevronDown className={cn("w-4 h-4 transition-transform duration-300", open && "rotate-180")} />
-            </button>
+            </button>}
 
             {/* Expandable panel */}
             <div
@@ -90,7 +90,12 @@ export function ClientsList({ clients }: { clients: ClientListItem[] }) {
             >
               <div className="overflow-hidden">
                 <div className="px-5 pb-5 border-t border-black/5">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-4">
+                  <div className="flex justify-end pt-2">
+                    <button onClick={() => setOpenId(null)} title="Sbalit náhled" className="inline-flex items-center gap-1 text-xs text-[#6366F1] hover:underline">
+                      <ChevronDown className="w-3.5 h-3.5 rotate-180" /> Sbalit
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
                     {/* Contact */}
                     <div className="glass rounded-xl p-4 space-y-2">
                       <p className="text-[10px] uppercase tracking-wide text-[#A8A29E]">Kontakt</p>
