@@ -11,7 +11,14 @@ async function getDb() {
   if (isPostgres) {
     const { PrismaPg } = await import("@prisma/adapter-pg");
     const { PrismaClient } = await import("../src/generated/prisma/client.js");
-    const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+    const schema = new URL(process.env.DATABASE_URL!).searchParams.get("schema") || "public";
+    const adapter = new PrismaPg(
+      {
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+      },
+      { schema }
+    );
     prisma = new PrismaClient({ adapter });
   } else {
     const { PrismaBetterSqlite3 } = await import("@prisma/adapter-better-sqlite3");
