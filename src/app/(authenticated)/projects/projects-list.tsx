@@ -20,6 +20,7 @@ import { getProjectQuickView, type QuickView } from "@/server/actions/finance-ov
 
 export type ProjectListItem = {
   id: string;
+  jobNumber?: string | null;
   name: string;
   status: string;
   clientName: string;
@@ -161,6 +162,11 @@ export function ProjectsList({ projects }: { projects: ProjectListItem[] }) {
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3">
+                    {project.jobNumber && (
+                      <span className="text-[10px] font-semibold text-[#6366F1] bg-[#6366F1]/10 rounded px-1.5 py-0.5 shrink-0">
+                        {project.jobNumber}
+                      </span>
+                    )}
                     <h3 className="font-medium text-[#1C1917] truncate">{project.name}</h3>
                     <ProjectStatusBadge status={project.status} />
                     {project.healthLevel && (

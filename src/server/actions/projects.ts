@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { nextNumber } from "@/lib/numbering";
 import { auth } from "@/lib/auth";
 
 export async function getProjects(filters?: {
@@ -70,6 +71,7 @@ export async function createProject(data: {
 
   const project = await prisma.project.create({
     data: {
+      jobNumber: await nextNumber("JOB"),
       name: data.name,
       description: data.description,
       clientId: data.clientId,
@@ -131,6 +133,7 @@ export async function duplicateProject(id: string) {
 
   const copy = await prisma.project.create({
     data: {
+      jobNumber: await nextNumber("JOB"),
       name: `${source.name} (kopie)`,
       description: source.description,
       status: "NOVY",

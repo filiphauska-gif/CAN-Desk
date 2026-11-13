@@ -47,6 +47,19 @@ export default async function ProjectDetailPage({
   const budget = await getBudgetByProject(id);
   const financeOverview = await getProjectFinanceOverview(id);
 
+  const [invoices, orders] = await Promise.all([
+    prisma.invoice.findMany({
+      where: { projectId: id },
+      include: { items: { orderBy: { sortOrder: "asc" } } },
+      orderBy: { date: "desc" },
+    }),
+    prisma.order.findMany({
+      where: { projectId: id },
+      include: { items: { orderBy: { sortOrder: "asc" } } },
+      orderBy: { date: "desc" },
+    }),
+  ]);
+
   const clients = await prisma.client.findMany({
     select: { id: true, name: true },
     orderBy: { name: "asc" },
@@ -212,6 +225,16 @@ export default async function ProjectDetailPage({
         projectUsers={projectUsers}
         budget={budget}
         financeOverview={financeOverview}
+        invoices={invoices.map((i) => ({
+          ...i,
+          date: i.date.toISOString(),
+          dueDate: i.dueDate ? i.dueDate.toISOString() : null,
+        }))}
+        orders={orders.map((o) => ({
+          ...o,
+          date: o.date.toISOString(),
+          dueDate: o.dueDate ? o.dueDate.toISOString() : null,
+        }))}
       />
     </div>
   );

@@ -4,19 +4,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Wallet, Receipt, Clock, MessageSquare, CheckSquare } from "lucide-react";
+import { Wallet, Receipt, Clock, MessageSquare, CheckSquare, FileText, Package } from "lucide-react";
 import { ProjectTasksTab } from "./tabs/project-tasks-tab";
 import { ProjectTimeTab } from "./tabs/project-time-tab";
 import { ProjectBudgetNewTab } from "./tabs/budget/index";
 import { ProjectFinanceTab } from "./tabs/project-finance-tab";
 import { ProjectCommentsTab } from "./tabs/project-comments-tab";
 import { BudgetBarsCard } from "@/components/shared/budget-bars";
+import { ProjectInvoicesTab, ProjectOrdersTab } from "./tabs/project-documents-tabs";
 
 const tabs = [
   { id: "prehled", label: "Přehled", icon: Wallet },
   { id: "ukoly", label: "Úkoly", icon: CheckSquare },
   { id: "cas", label: "Čas", icon: Clock },
   { id: "rozpocet", label: "Rozpočet", icon: Receipt },
+  { id: "faktury", label: "Faktury", icon: FileText },
+  { id: "objednavky", label: "Objednávky", icon: Package },
   { id: "naklady", label: "Náklady", icon: Wallet },
   { id: "komentare", label: "Komentáře", icon: MessageSquare },
 ];
@@ -32,6 +35,8 @@ export function ProjectDetailTabs({
   projectUsers,
   budget,
   financeOverview,
+  invoices,
+  orders,
 }: {
   projectId: string;
   activeTab: string;
@@ -43,6 +48,8 @@ export function ProjectDetailTabs({
   projectUsers: { id: string; name: string }[];
   budget: any;
   financeOverview: any;
+  invoices: any[];
+  orders: any[];
 }) {
   const pathname = usePathname();
 
@@ -213,6 +220,12 @@ export function ProjectDetailTabs({
           />
         )}
         {activeTab === "naklady" && <ProjectFinanceTab projectId={projectId} costs={project.costs} budgetAmount={project.budgetAmount} budgetHours={project.budgetHours} totalHours={totalHours} canEdit={canEdit} />}
+        {activeTab === "faktury" && (
+          <ProjectInvoicesTab projectId={projectId} invoices={invoices} canEdit={canEdit} hasBudget={financeOverview.hasBudget} />
+        )}
+        {activeTab === "objednavky" && (
+          <ProjectOrdersTab projectId={projectId} orders={orders} canEdit={canEdit} />
+        )}
         {activeTab === "komentare" && <ProjectCommentsTab projectId={projectId} comments={project.comments} userId={user.id} />}
       </div>
     </div>
