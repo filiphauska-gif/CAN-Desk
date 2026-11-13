@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { format, isBefore } from "date-fns";
+import { format, isBefore, addDays } from "date-fns";
 import { Plus, Pencil, Trash2, X, CheckSquare, Search } from "lucide-react";
 import { PriorityBadge, taskStatusLabels } from "@/components/shared/status-badges";
 import { createTask, updateTask, updateTaskAssignments, deleteTask } from "@/server/actions/tasks";
@@ -37,16 +37,26 @@ export function TasksList({
   const [editing, setEditing] = useState<TaskRow | null>(null);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
+  const [quick, setQuick] = useState<"all" | "overdue" | "week">("all");
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
+  const now = new Date();
   const q = query.trim().toLowerCase();
-  const visible = q
-    ? tasks.filter((t) =>
-        [t.title, t.projectName, t.clientName || "", ...t.assignees.map((a) => a.name)]
-          .join(" ")
-          .toLowerCase()
-          .includes(q)
-      )
-    : tasks;
+  const visible = tasks
+    .filter((t) => {
+      if (quick === "overdue") return t.deadline && t.status !== "DONE" && isBefore(new Date(t.deadline), now);
+      if (quick === "week")
+        return t.deadline && t.status !== "DONE" && !isBefore(addDays(now, 7), new Date(t.deadline));
+      return true;
+    })
+    .filter((t) =>
+      q
+        ? [t.title, t.projectName, t.clientName || "", ...t.assignees.map((a) => a.name)]
+            .join(" ")
+            .toLowerCase()
+            .includes(q)
+        : true
+    );
 
   function openCreate() {
     setEditing(null);
@@ -99,22 +109,51 @@ export function TasksList({
   }
 
   async function handleDelete(task: TaskRow) {
-    if (!confirm(`Smazat úkol "${task.title}"?`)) return;
+    if (confirmDelete !== task.id) {
+      setConfirmDelete(task.id);
+      setTimeout(() => setConfirmDelete((c) => (c === task.id ? null : c)), 3000);
+      return;
+    }
+    setConfirmDelete(null);
     await deleteTask(task.id);
     router.refresh();
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3 justify-between">
-        <div className="relative flex-1 max-w-xs">
-          <Search className="w-3.5 h-3.5 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Hledat úkol, zakázku, člověka..."
-            className="w-full pl-8 pr-3 py-1.5 rounded-lg border border-white/40 text-sm bg-white/70 focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
-          />
+      <div className="flex items-center gap-3 justify-between flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 text-[#A8A29E] absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Hledat úkol, zakázku, člověka..."
+              className="w-64 pl-8 pr-3 py-1.5 rounded-lg border border-white/40 text-sm bg-white/70 focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
+            />
+          </div>
+          <div className="flex gap-1.5">
+            {(
+              [
+                ["all", "Všechny"],
+                ["overdue", "Po termínu"],
+                ["week", "Tento týden"],
+              ] as const
+            ).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setQuick(key)}
+                className={cn(
+                  "px-2.5 py-1.5 rounded-lg text-xs border transition-colors",
+                  quick === key
+                    ? "btn-glass-primary text-white border-[#6366F1]"
+                    : "bg-white border-white/40 text-[#78716C] hover:border-[#6366F1]"
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
         <Button size="sm" className="gap-2 btn-glass-primary text-white" onClick={openCreate}>
           <Plus className="w-4 h-4" /> Nový úkol
@@ -290,10 +329,15 @@ export function TasksList({
                 </button>
                 <button
                   onClick={() => handleDelete(task)}
-                  title="Smazat úkol"
-                  className="p-1.5 rounded-lg text-[#A8A29E] hover:text-rose-500 hover:bg-white/70 transition-colors"
+                  title={confirmDelete === task.id ? "Klikni znovu pro smazání" : "Smazat úkol"}
+                  className={cn(
+                    "rounded-lg transition-colors",
+                    confirmDelete === task.id
+                      ? "px-2 py-1 bg-rose-500 text-white text-[11px] font-medium"
+                      : "p-1.5 text-[#A8A29E] hover:text-rose-500 hover:bg-white/70"
+                  )}
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  {confirmDelete === task.id ? "Smazat?" : <Trash2 className="w-3.5 h-3.5" />}
                 </button>
               </div>
             );
