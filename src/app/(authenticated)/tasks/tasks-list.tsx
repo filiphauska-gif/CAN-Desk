@@ -38,7 +38,6 @@ export function TasksList({
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [quick, setQuick] = useState<"all" | "overdue" | "week">("all");
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   const now = new Date();
   const q = query.trim().toLowerCase();
@@ -109,12 +108,6 @@ export function TasksList({
   }
 
   async function handleDelete(task: TaskRow) {
-    if (confirmDelete !== task.id) {
-      setConfirmDelete(task.id);
-      setTimeout(() => setConfirmDelete((c) => (c === task.id ? null : c)), 3000);
-      return;
-    }
-    setConfirmDelete(null);
     await deleteTask(task.id);
     router.refresh();
   }
@@ -329,15 +322,10 @@ export function TasksList({
                 </button>
                 <button
                   onClick={() => handleDelete(task)}
-                  title={confirmDelete === task.id ? "Klikni znovu pro smazání" : "Smazat úkol"}
-                  className={cn(
-                    "rounded-lg transition-colors",
-                    confirmDelete === task.id
-                      ? "px-2 py-1 bg-rose-500 text-white text-[11px] font-medium"
-                      : "p-1.5 text-[#A8A29E] hover:text-rose-500 hover:bg-white/70"
-                  )}
+                  title="Smazat úkol"
+                  className="p-1.5 rounded-lg text-[#A8A29E] hover:text-rose-500 hover:bg-white/70 transition-colors"
                 >
-                  {confirmDelete === task.id ? "Smazat?" : <Trash2 className="w-3.5 h-3.5" />}
+                  <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
             );
