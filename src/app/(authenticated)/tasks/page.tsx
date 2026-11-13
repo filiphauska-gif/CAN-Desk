@@ -2,10 +2,9 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getTasks, getMyTasks } from "@/server/actions/tasks";
-import { TaskStatusBadge, PriorityBadge, taskStatusLabels } from "@/components/shared/status-badges";
+import { taskStatusLabels } from "@/components/shared/status-badges";
+import { TasksList } from "./tasks-list";
 import Link from "next/link";
-import { format, isBefore } from "date-fns";
-import { CheckSquare, Filter } from "lucide-react";
 
 export default async function TasksPage({
   searchParams,
@@ -19,21 +18,39 @@ export default async function TasksPage({
   const view = params.view || "mine";
 
   let tasks: any[];
-  if (view === "mine") {
-    tasks = await getMyTasks(user.id);
-  } else if (view === "team") {
-    tasks = await getTasks({ status: params.status || undefined });
-  } else if (view === "all") {
+  if (view === "all") {
     tasks = await getTasks({ status: params.status || undefined });
   } else {
     tasks = await getMyTasks(user.id);
   }
 
-  const statusCounts = await prisma.task.groupBy({
-    by: ["status"],
-    _count: { id: true },
-  });
+  const [statusCounts, projects, users] = await Promise.all([
+    prisma.task.groupBy({ by: ["status"], _count: { id: true } }),
+    prisma.project.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+    prisma.user.findMany({
+      where: { active: true },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
   const statusMap = Object.fromEntries(statusCounts.map((s) => [s.status, s._count.id]));
+
+  const rows = tasks.map((t: any) => ({
+    id: t.id,
+    title: t.title,
+    description: t.description,
+    status: t.status,
+    priority: t.priority,
+    estimatedHours: t.estimatedHours,
+    deadline: t.deadline ? t.deadline.toISOString() : null,
+    projectId: t.projectId,
+    projectName: t.project?.name || "",
+    clientName: t.project?.client?.name || null,
+    assignees: (t.assignments || []).map((a: any) => ({ id: a.user.id, name: a.user.name })),
+  }));
 
   return (
     <div className="space-y-6">
@@ -75,55 +92,13 @@ export default async function TasksPage({
           </Link>
         ))}
         {params.status && (
-          <Link
-            href={`/tasks?view=${view}`}
-            className="px-3 py-1.5 rounded-lg text-xs text-[#78716C] hover:text-[#1C1917]"
-          >
+          <Link href={`/tasks?view=${view}`} className="px-3 py-1.5 rounded-lg text-xs text-[#78716C] hover:text-[#1C1917]">
             ✕ Vymazat filtr
           </Link>
         )}
       </div>
 
-      {/* Tasks list */}
-      <div className="glass rounded-xl">
-        <div className="divide-y divide-black/5">
-          {tasks.map((task: any) => (
-            <Link
-              key={task.id}
-              href={`/projects/${task.projectId}?tab=ukoly`}
-              className="flex items-center gap-3 px-5 py-3 hover:bg-white/40 transition-colors"
-            >
-              <TaskStatusBadge status={task.status} />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-[#1C1917] truncate">{task.title}</p>
-                <p className="text-xs text-[#78716C] truncate">
-                  {task.project.name}
-                  {task.project.client && ` • ${task.project.client.name}`}
-                  {task.assignee && ` • ${task.assignee.name}`}
-                </p>
-              </div>
-              {task.priority > 0 && <PriorityBadge priority={task.priority} />}
-              {task.deadline && (
-                <span
-                  className={`text-xs shrink-0 ${
-                    isBefore(new Date(task.deadline), new Date()) && task.status !== "DONE"
-                      ? "text-rose-500 font-medium"
-                      : "text-[#78716C]"
-                  }`}
-                >
-                  {format(new Date(task.deadline), "d.M.")}
-                </span>
-              )}
-            </Link>
-          ))}
-          {tasks.length === 0 && (
-            <div className="px-5 py-12 text-center">
-              <CheckSquare className="w-12 h-12 text-[#D6D3D1] mx-auto mb-3" />
-              <p className="text-[#78716C]">Žádné úkoly</p>
-            </div>
-          )}
-        </div>
-      </div>
+      <TasksList tasks={rows} projects={projects} users={users} />
     </div>
   );
 }

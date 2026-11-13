@@ -12,6 +12,8 @@ import { ProjectDetailTabs } from "./project-detail-tabs";
 import { ProjectStatusSwitcher } from "@/components/shared/project-status-switcher";
 import { getBudgetByProject } from "@/server/actions/budget-new";
 import { getProjectFinanceOverview } from "@/server/actions/finance-overview";
+import { ProjectEditDialog } from "./project-edit-dialog";
+import { projectHealth } from "@/lib/project-health";
 
 export default async function ProjectDetailPage({
   params,
@@ -44,6 +46,26 @@ export default async function ProjectDetailPage({
   const budget = await getBudgetByProject(id);
   const financeOverview = await getProjectFinanceOverview(id);
 
+  const clients = await prisma.client.findMany({
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
+
+  // Budget shown in header must match the budget picture: document wins over the plain project field
+  const headerBudget = financeOverview.hasBudget
+    ? financeOverview.totalBudget
+    : project.budgetAmount;
+
+  const health = projectHealth({
+    status: project.status,
+    deadline: project.deadline,
+    overdueTasks: project.tasks.filter(
+      (t: any) => t.deadline && t.deadline < new Date() && t.status !== "DONE"
+    ).length,
+    workedHours: financeOverview.workedHours,
+    plannedHours: financeOverview.plannedHours,
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -63,6 +85,29 @@ export default async function ProjectDetailPage({
               projectId={id}
               currentStatus={project.status}
             />
+            {canEdit && (
+              <ProjectEditDialog
+                project={project}
+                clients={clients}
+                users={projectUsers}
+              />
+            )}
+            <span
+              title={health.detail || health.label}
+              className="inline-flex items-center gap-1 text-[11px] text-[#78716C]"
+            >
+              <span
+                className={
+                  "w-1.5 h-1.5 rounded-full " +
+                  (health.level === "risk"
+                    ? "bg-rose-500"
+                    : health.level === "warn"
+                    ? "bg-amber-400"
+                    : "bg-emerald-400")
+                }
+              />
+              {health.label}
+            </span>
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-xs text-[#78716C]">
             <span className="flex items-center gap-1">
@@ -81,12 +126,17 @@ export default async function ProjectDetailPage({
                 Deadline: {format(project.deadline, "d.M.yyyy")}
               </span>
             )}
-            {project.budgetAmount && (
+            {headerBudget ? (
               <span className="flex items-center gap-1">
                 <Wallet className="w-3 h-3" />
-                Rozpočet: {project.budgetAmount.toLocaleString("cs-CZ")} Kč
+                Rozpočet: {headerBudget.toLocaleString("cs-CZ")} Kč
+                {financeOverview.hasBudget && project.budgetAmount && project.budgetAmount !== headerBudget && (
+                  <span className="text-[#A8A29E]">
+                    (karta: {project.budgetAmount.toLocaleString("cs-CZ")} Kč)
+                  </span>
+                )}
               </span>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

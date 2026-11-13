@@ -79,14 +79,12 @@ export function ProjectDetailTabs({
       <div className="mt-6">
         {activeTab === "prehled" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Budget at a glance - the money picture first */}
-            <div className="lg:col-span-2">
-              <BudgetBarsCard
-                projectId={projectId}
-                overview={financeOverview}
-                canEdit={canEdit}
-              />
-            </div>
+            {/* Budget at a glance - money picture (half width, stacked) */}
+            <BudgetBarsCard
+              projectId={projectId}
+              overview={financeOverview}
+              canEdit={canEdit}
+            />
 
             {/* Next tasks */}
             <div className="glass rounded-xl">

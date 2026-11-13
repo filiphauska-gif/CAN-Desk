@@ -107,6 +107,16 @@ export async function updateTaskAssignments(
   if (task) revalidatePath(`/projects/${task.projectId}`);
 }
 
+export async function deleteTask(id: string) {
+  const session = await auth();
+  if (!session?.user) throw new Error("Unauthorized");
+
+  const task = await prisma.task.delete({ where: { id } });
+  revalidatePath("/tasks");
+  revalidatePath(`/projects/${task.projectId}`);
+  return task;
+}
+
 export async function getMyTasks(userId: string) {
   return prisma.task.findMany({
     where: {

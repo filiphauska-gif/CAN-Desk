@@ -10,6 +10,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { FolderKanban } from "lucide-react";
 import { NewProjectDialog } from "@/app/(authenticated)/new-project-dialog";
+import { projectHealth } from "@/lib/project-health";
 
 export default async function ProjectsPage({
   searchParams,
@@ -28,10 +29,24 @@ export default async function ProjectsPage({
   };
   const projects = await getProjects(filters);
   const clients = await getClients();
-  const users = await prisma.user.findMany({
-    where: { active: true },
-    select: { id: true, name: true, role: true },
-  });
+  const [users, overdueGroup, hoursGroup] = await Promise.all([
+    prisma.user.findMany({
+      where: { active: true },
+      select: { id: true, name: true, role: true },
+    }),
+    prisma.task.groupBy({
+      by: ["projectId"],
+      where: { deadline: { lt: new Date() }, status: { not: "DONE" } },
+      _count: { id: true },
+    }),
+    prisma.timeEntry.groupBy({
+      by: ["projectId"],
+      where: { entryType: "WORK" },
+      _sum: { hours: true },
+    }),
+  ]);
+  const overdueByProject = Object.fromEntries(overdueGroup.map((g) => [g.projectId, g._count.id]));
+  const hoursByProject = Object.fromEntries(hoursGroup.map((g) => [g.projectId, g._sum.hours || 0]));
 
   return (
     <div className="space-y-6">
@@ -49,18 +64,30 @@ export default async function ProjectsPage({
 
       {/* Project list with quick peek */}
       <ProjectsList
-        projects={projects.map((p: any) => ({
-          id: p.id,
-          name: p.name,
-          status: p.status,
-          clientName: p.client.name,
-          accountName: p.account?.name ?? null,
-          deadline: p.deadline ? new Date(p.deadline).toISOString() : null,
-          budgetAmount: p.budgetAmount ?? null,
-          description: p.description ?? null,
-          tasksCount: p._count.tasks,
-          timeCount: p._count.timeEntries,
-        }))}
+        projects={projects.map((p: any) => {
+          const health = projectHealth({
+            status: p.status,
+            deadline: p.deadline ? new Date(p.deadline) : null,
+            overdueTasks: overdueByProject[p.id] || 0,
+            workedHours: hoursByProject[p.id] || 0,
+            plannedHours: p.budgetHours || 0,
+          });
+          return {
+            id: p.id,
+            name: p.name,
+            status: p.status,
+            clientName: p.client.name,
+            accountName: p.account?.name ?? null,
+            deadline: p.deadline ? new Date(p.deadline).toISOString() : null,
+            budgetAmount: p.budgetAmount ?? null,
+            description: p.description ?? null,
+            tasksCount: p._count.tasks,
+            timeCount: p._count.timeEntries,
+            healthLabel: health.label,
+            healthLevel: health.level,
+            healthDetail: health.detail,
+          };
+        })}
       />
     </div>
   );

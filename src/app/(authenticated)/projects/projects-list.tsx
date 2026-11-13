@@ -29,6 +29,9 @@ export type ProjectListItem = {
   description: string | null;
   tasksCount: number;
   timeCount: number;
+  healthLabel?: string;
+  healthLevel?: "ok" | "warn" | "risk";
+  healthDetail?: string;
 };
 
 /* ---------------- expanded panel ---------------- */
@@ -160,6 +163,24 @@ export function ProjectsList({ projects }: { projects: ProjectListItem[] }) {
                   <div className="flex items-center gap-3">
                     <h3 className="font-medium text-[#1C1917] truncate">{project.name}</h3>
                     <ProjectStatusBadge status={project.status} />
+                    {project.healthLevel && (
+                      <span
+                        className="inline-flex items-center gap-1 text-[11px] text-[#78716C]"
+                        title={project.healthDetail || project.healthLabel}
+                      >
+                        <span
+                          className={cn(
+                            "w-1.5 h-1.5 rounded-full",
+                            project.healthLevel === "risk"
+                              ? "bg-rose-500"
+                              : project.healthLevel === "warn"
+                              ? "bg-amber-400"
+                              : "bg-emerald-400"
+                          )}
+                        />
+                        {project.healthLabel}
+                      </span>
+                    )}
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1.5">
                     <span className="text-xs text-[#78716C]">{project.clientName}</span>
