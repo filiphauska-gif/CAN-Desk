@@ -10,7 +10,6 @@ import {
   CheckSquare,
   Clock,
   FolderKanban,
-  GripVertical,
   RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -43,16 +42,11 @@ export type DashboardData = {
 };
 
 const GRID_EDIT_CSS = `
-  /* Subtle drag grips — always available, clearer on hover */
-  .dashboard-grid .widget-drag-handle {
-    opacity: .3;
-    transition: opacity .2s ease, background-color .2s ease;
-    cursor: grab;
-  }
-  .dashboard-grid .widget-drag-handle:hover { opacity: 1; background: rgba(255,255,255,.6); }
-  .dashboard-grid .widget-drag-handle:active { cursor: grabbing; }
+  /* Title-bar dragging — like a Windows window, no visible grip */
+  .dashboard-grid .widget-titlebar { cursor: grab; }
+  .dashboard-grid .widget-titlebar:active { cursor: grabbing; }
 
-  /* Smooth movement + resize during drag */
+  /* Smooth movement + resize */
   .dashboard-grid .grid-stack-item > .grid-stack-item-content {
     overflow: hidden;
     border-radius: .75rem;
@@ -67,20 +61,17 @@ const GRID_EDIT_CSS = `
     box-shadow: 0 14px 34px -14px rgba(76,71,106,.22);
   }
 
-  /* Resize corner — tiny corner grip, fades in on hover */
-  .dashboard-grid .ui-resizable-handle { opacity: 0; transition: opacity .2s ease; }
-  .dashboard-grid .grid-stack-item:hover .ui-resizable-se { opacity: 1; }
-  .dashboard-grid .ui-resizable-se {
-    width: 18px; height: 18px; right: 3px; bottom: 3px;
-    background: none; cursor: nwse-resize;
+  /* Invisible resize hit-zones — cursor changes on hover, like window edges */
+  .dashboard-grid .ui-resizable-handle {
+    opacity: 0 !important;
+    background: none !important;
+    background-image: none !important;
   }
-  .dashboard-grid .ui-resizable-se::after {
-    content: ""; position: absolute; right: 3px; bottom: 3px;
-    width: 9px; height: 9px;
-    border-right: 2px solid rgba(99,102,241,.55);
-    border-bottom: 2px solid rgba(99,102,241,.55);
-    border-radius: 0 0 3px 0;
-  }
+  .dashboard-grid .ui-resizable-e  { width: 10px;  right: 0;  top: 6px; bottom: 6px; cursor: ew-resize; }
+  .dashboard-grid .ui-resizable-w  { width: 10px;  left: 0;   top: 6px; bottom: 6px; cursor: ew-resize; }
+  .dashboard-grid .ui-resizable-s  { height: 10px; bottom: 0; left: 6px; right: 6px; cursor: ns-resize; }
+  .dashboard-grid .ui-resizable-se { width: 18px;  height: 18px; right: 0; bottom: 0; cursor: nwse-resize; }
+  .dashboard-grid .ui-resizable-sw { width: 18px;  height: 18px; left: 0;  bottom: 0; cursor: nesw-resize; }
 `;
 
 /* ---------------- reusable widget shell ---------------- */
@@ -95,14 +86,9 @@ function Shell({
 }) {
   return (
     <div className="glass rounded-xl h-full flex flex-col min-h-0">
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-black/5 shrink-0">
+      <div className="widget-titlebar flex items-center justify-between px-4 py-2.5 border-b border-black/5 shrink-0 select-none">
         <h2 className="text-sm font-semibold text-[#1C1917]">{title}</h2>
-        <div className="flex items-center gap-1.5">
-          {action}
-          <span className="widget-drag-handle p-1 rounded hover:bg-white/50 text-[#A8A29E]">
-            <GripVertical className="w-4 h-4" />
-          </span>
-        </div>
+        {action}
       </div>
       <div className="flex-1 min-h-0 overflow-auto">{children}</div>
     </div>
@@ -119,9 +105,7 @@ function StatsWidget({ d }: { d: DashboardData }) {
   ];
   return (
     <div className="relative h-full">
-      <span className="widget-drag-handle absolute top-2 right-2 z-10 p-1 rounded hover:bg-white/50 text-[#A8A29E]">
-        <GripVertical className="w-4 h-4" />
-      </span>
+      <div className="widget-titlebar absolute top-0 left-0 right-0 h-4" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 h-full content-center p-3">
         {tiles.map((t) => (
           <div key={t.label} className="rounded-xl bg-white/40 border border-white/50 px-3 py-2.5">
@@ -320,28 +304,40 @@ export function DashboardGrid({
           column: 12,
           cellHeight: 44,
           margin: 6,
-          handle: ".widget-drag-handle",
+          handle: ".widget-titlebar",
+          draggable: { cancel: "a, button, input, select, textarea" },
+          resizable: { handles: "e, w, s, se, sw" },
           animate: true,
         },
         elRef.current
       );
       gridRef.current = grid;
 
-      // Restore saved layout
+      // Restore saved layout — only if every entry is complete & valid
       if (initialLayout) {
         try {
           const saved = JSON.parse(initialLayout);
-          if (Array.isArray(saved) && saved.length) grid.load(saved, false);
+          const valid =
+            Array.isArray(saved) &&
+            saved.length > 0 &&
+            saved.every(
+              (n: any) =>
+                typeof n?.id === "string" &&
+                [n.x, n.y, n.w, n.h].every((v) => typeof v === "number" && Number.isFinite(v))
+            );
+          if (valid) grid.load(saved, false);
         } catch {}
       }
 
       grid.on("change", () => {
         clearTimeout(timer);
         timer = setTimeout(() => {
-          const layout = grid.save(false) as any[];
-          saveDashboardLayout(
-            JSON.stringify(layout.map((n) => ({ id: n.id, x: n.x, y: n.y, w: n.w, h: n.h })))
-          ).catch(() => {});
+          // Read authoritative state from the engine (always complete values)
+          const layout = (grid.engine?.nodes || [])
+            .filter((n: any) => n.id && [n.x, n.y, n.w, n.h].every((v: any) => typeof v === "number" && Number.isFinite(v)))
+            .map((n: any) => ({ id: n.id, x: n.x, y: n.y, w: n.w, h: n.h }));
+          if (layout.length !== 5) return; // never persist incomplete layouts
+          saveDashboardLayout(JSON.stringify(layout)).catch(() => {});
         }, 600);
       });
     })();
