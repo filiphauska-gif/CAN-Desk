@@ -10,6 +10,7 @@ import { ProjectTimeTab } from "./tabs/project-time-tab";
 import { ProjectBudgetNewTab } from "./tabs/budget/index";
 import { ProjectFinanceTab } from "./tabs/project-finance-tab";
 import { ProjectCommentsTab } from "./tabs/project-comments-tab";
+import { BudgetBarsCard } from "@/components/shared/budget-bars";
 
 const tabs = [
   { id: "prehled", label: "Přehled", icon: Wallet },
@@ -30,6 +31,7 @@ export function ProjectDetailTabs({
   billableHours,
   projectUsers,
   budget,
+  financeOverview,
 }: {
   projectId: string;
   activeTab: string;
@@ -40,6 +42,7 @@ export function ProjectDetailTabs({
   billableHours: number;
   projectUsers: { id: string; name: string }[];
   budget: any;
+  financeOverview: any;
 }) {
   const pathname = usePathname();
 
@@ -76,6 +79,15 @@ export function ProjectDetailTabs({
       <div className="mt-6">
         {activeTab === "prehled" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Budget at a glance - the money picture first */}
+            <div className="lg:col-span-2">
+              <BudgetBarsCard
+                projectId={projectId}
+                overview={financeOverview}
+                canEdit={canEdit}
+              />
+            </div>
+
             {/* Next tasks */}
             <div className="glass rounded-xl">
               <div className="px-5 py-4 border-b border-black/5">

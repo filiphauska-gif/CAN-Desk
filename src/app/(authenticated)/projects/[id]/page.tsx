@@ -11,6 +11,7 @@ import { prisma } from "@/lib/db";
 import { ProjectDetailTabs } from "./project-detail-tabs";
 import { ProjectStatusSwitcher } from "@/components/shared/project-status-switcher";
 import { getBudgetByProject } from "@/server/actions/budget-new";
+import { getProjectFinanceOverview } from "@/server/actions/finance-overview";
 
 export default async function ProjectDetailPage({
   params,
@@ -41,6 +42,7 @@ export default async function ProjectDetailPage({
   });
 
   const budget = await getBudgetByProject(id);
+  const financeOverview = await getProjectFinanceOverview(id);
 
   return (
     <div className="space-y-6">
@@ -107,6 +109,7 @@ export default async function ProjectDetailPage({
         billableHours={billableHours}
         projectUsers={projectUsers}
         budget={budget}
+        financeOverview={financeOverview}
       />
     </div>
   );

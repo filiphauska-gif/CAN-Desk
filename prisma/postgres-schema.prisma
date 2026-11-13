@@ -99,6 +99,7 @@ model Project {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
+  invoices    Invoice[]
   tasks       Task[]
   timeEntries TimeEntry[]
   comments    Comment[]
@@ -262,4 +263,16 @@ model BudgetItem {
   project     Project  @relation(fields: [projectId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Invoice {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type      String   @default("ISSUED") // ISSUED = vydaná klientovi, RECEIVED = přijatá nákladová
+  number    String?
+  amount    Float
+  date      DateTime @default(now())
+  note      String?
+  createdAt DateTime @default(now())
 }

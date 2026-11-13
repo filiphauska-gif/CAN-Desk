@@ -5,6 +5,7 @@ import { getClients } from "@/server/actions/clients";
 import { prisma } from "@/lib/db";
 import { ProjectStatusBadge } from "@/components/shared/status-badges";
 import { ProjectFilters } from "./project-filters";
+import { ProjectsList } from "./projects-list";
 import Link from "next/link";
 import { format } from "date-fns";
 import { FolderKanban } from "lucide-react";
@@ -46,72 +47,21 @@ export default async function ProjectsPage({
 
       <ProjectFilters clients={clients} />
 
-      {/* Project list */}
-      <div className="space-y-3">
-        {projects.map((project) => (
-          <Link
-            key={project.id}
-            href={`/projects/${project.id}`}
-            className="glass rounded-xl p-5 hover:border-[#6366F1]/30 hover:shadow-sm transition-all block"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3">
-                  <h3 className="font-medium text-[#1C1917] truncate">
-                    {project.name}
-                  </h3>
-                  <ProjectStatusBadge status={project.status} />
-                </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1.5">
-                  <span className="text-xs text-[#78716C]">
-                    {project.client.name}
-                  </span>
-                  {(project as any).account?.name && (
-                    <span className="text-xs text-[#78716C]">
-                      {(project as any).account.name}
-                    </span>
-                  )}
-                  {project.deadline && (
-                    <span className="text-xs text-[#78716C]">
-                      Deadline: {format(project.deadline, "d.M.yyyy")}
-                    </span>
-                  )}
-                  {project.budgetAmount && (
-                    <span className="text-xs text-[#78716C]">
-                      Rozpočet: {project.budgetAmount.toLocaleString("cs-CZ")} Kč
-                    </span>
-                  )}
-                </div>
-                {project.description && (
-                  <p className="text-xs text-[#A8A29E] mt-2 line-clamp-1">
-                    {project.description}
-                  </p>
-                )}
-              </div>
-              <div className="flex items-center gap-4 shrink-0">
-                <div className="text-center">
-                  <p className="text-sm font-medium text-[#1C1917]">
-                    {project._count.tasks}
-                  </p>
-                  <p className="text-xs text-[#78716C]">úkolů</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-medium text-[#1C1917]">
-                    {project._count.timeEntries}
-                  </p>
-                  <p className="text-xs text-[#78716C]">časů</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-        ))}
-        {projects.length === 0 && (
-          <div className="glass rounded-xl p-12 text-center">
-            <FolderKanban className="w-12 h-12 text-[#D6D3D1] mx-auto mb-3" />
-            <p className="text-[#78716C]">Žádné projekty neodpovídají filtrům</p>
-          </div>
-        )}
-      </div>
+      {/* Project list with quick peek */}
+      <ProjectsList
+        projects={projects.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          status: p.status,
+          clientName: p.client.name,
+          accountName: p.account?.name ?? null,
+          deadline: p.deadline ? new Date(p.deadline).toISOString() : null,
+          budgetAmount: p.budgetAmount ?? null,
+          description: p.description ?? null,
+          tasksCount: p._count.tasks,
+          timeCount: p._count.timeEntries,
+        }))}
+      />
     </div>
   );
 }
