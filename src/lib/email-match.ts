@@ -36,10 +36,16 @@ export async function resolveEmailTarget(
   }
 
   // 2) sender is a known client contact
-  const client = await prisma.client.findFirst({
-    where: { email: fromAddress },
-    select: { id: true, name: true },
+  const allClients = await prisma.client.findMany({
+    select: { id: true, name: true, email: true, emailDomains: true },
   });
+  const domain = (fromAddress.split("@")[1] || "").toLowerCase();
+  const client =
+    allClients.find((c) => (c.email || "").toLowerCase() === fromAddress) ??
+    allClients.find((c) =>
+      (c.emailDomains || "").split(",").some((d) => d.trim() && domain.endsWith(d.trim().toLowerCase()))
+    ) ??
+    null;
 
   if (client) {
     const projects = await prisma.project.findMany({

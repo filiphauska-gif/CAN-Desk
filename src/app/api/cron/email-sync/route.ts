@@ -16,5 +16,7 @@ export async function GET(request: Request) {
       results[a.id] = -1;
     }
   }
-  return Response.json({ ok: true, results });
+  const { generateFollowupTasks } = await import("@/lib/email-watchdog");
+  const watchdog = await generateFollowupTasks();
+  return Response.json({ ok: true, results, watchdog });
 }
