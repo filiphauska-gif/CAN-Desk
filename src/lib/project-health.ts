@@ -20,7 +20,7 @@ export function projectHealth(input: {
   workedHours: number;
   plannedHours: number;
 }): ProjectHealth {
-  if (["DOKONCENO", "FAKTUROVANO", "ARCHIVOVANO"].includes(input.status)) {
+  if (["HOTOVO", "UZAVRENO", "ZRUSENO"].includes(input.status)) {
     return { level: "ok", label: "Uzavřeno", detail: "" };
   }
 

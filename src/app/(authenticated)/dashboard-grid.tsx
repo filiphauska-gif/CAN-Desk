@@ -177,9 +177,8 @@ function TasksWidget({ d }: { d: DashboardData }) {
 
 function ProjectsWidget({ d }: { d: DashboardData }) {
   const counts: [string, string][] = [
-    ["BEZI", "Běží"],
-    ["V_PRIPRAVE", "V přípravě"],
-    ["CEKA_NA_KLIENTA", "Čeká na klienta"],
+    ["OTEVRENO", "Otevřeno"],
+    ["CEKA", "Čeká"],
   ];
   return (
     <Shell
@@ -235,15 +234,11 @@ function RecentWidget({ d }: { d: DashboardData }) {
 }
 
 const STATUS_ROWS: [string, string, string][] = [
-  ["NOVY", "Nový", "bar-sky"],
-  ["V_PRIPRAVE", "V přípravě", "bar-amber"],
-  ["CEKA_NA_KLIENTA", "Čeká na klienta", "bar-violet"],
-  ["BEZI", "Běží", "bar-emerald"],
-  ["V_INTERNI_KONTROLE", "Interní kontrola", "bar-indigo"],
-  ["V_KLIENTSKE_KONTROLE", "Klientská kontrola", "bar-violet"],
-  ["DOKONCENO", "Dokončeno", "bar-teal"],
-  ["FAKTUROVANO", "Fakturováno", "bar-stone"],
-  ["ARCHIVOVANO", "Archivováno", "bar-stone"],
+  ["CEKA", "Čeká", "bar-amber"],
+  ["OTEVRENO", "Otevřeno", "bar-emerald"],
+  ["HOTOVO", "Hotovo", "bar-teal"],
+  ["UZAVRENO", "Uzavřeno", "bar-indigo"],
+  ["ZRUSENO", "Zrušeno", "bar-stone"],
 ];
 
 function StatusWidget({ d }: { d: DashboardData }) {

@@ -13,7 +13,7 @@ export async function getProjects(filters?: {
 }) {
   const where: any = {};
 
-  if (filters?.status) where.status = filters.status;
+  if (filters?.status && filters.status !== "ALL") where.status = filters.status;
   if (filters?.clientId) where.clientId = filters.clientId;
   if (filters?.accountId) where.accountId = filters.accountId;
   if (filters?.search) {
@@ -136,7 +136,7 @@ export async function duplicateProject(id: string) {
       jobNumber: await nextNumber("JOB"),
       name: `${source.name} (kopie)`,
       description: source.description,
-      status: "NOVY",
+      status: "CEKA",
       clientId: source.clientId,
       accountId: source.accountId,
       deadline: source.deadline,

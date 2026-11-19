@@ -14,7 +14,7 @@ export default async function FinancePage() {
   }
 
   const projects = await prisma.project.findMany({
-    where: { status: { notIn: ["ARCHIVOVANO"] } },
+    where: { status: { notIn: ["UZAVRENO", "ZRUSENO"] } },
     include: {
       client: { select: { name: true } },
       costs: true,

@@ -109,13 +109,12 @@ export default async function ClientDetailPage({
           </h2>
           {(() => {
             const activeProjects = client.projects.filter(
-              (p) => p.status === "BEZI" || p.status === "V_PRIPRAVE"
+              (p) => p.status === "OTEVRENO" || p.status === "CEKA"
             ).length;
             const finishedProjects = client.projects.filter(
               (p) =>
-                p.status === "DOKONCENO" ||
-                p.status === "FAKTUROVANO" ||
-                p.status === "ARCHIVOVANO"
+                p.status === "HOTOVO" ||
+                p.status === "UZAVRENO" || p.status === "ZRUSENO"
             ).length;
             return (
               <div className="space-y-3">

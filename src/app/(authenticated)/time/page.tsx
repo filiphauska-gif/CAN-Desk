@@ -24,7 +24,7 @@ export default async function TimePage() {
     }),
     getTimeByUser(startOfMonth, endOfMonth),
     prisma.project.findMany({
-      where: { status: { notIn: ["ARCHIVOVANO"] } },
+      where: { status: { notIn: ["UZAVRENO", "ZRUSENO"] } },
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),

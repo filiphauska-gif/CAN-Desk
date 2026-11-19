@@ -53,7 +53,7 @@ export function ProjectFilters({
           onChange={(e) => setFilter("status", e.target.value || null)}
           className="px-3 py-2 rounded-lg border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-white"
         >
-          <option value="">Všechny statusy</option>
+          <option value="">Aktivní (Čeká, Otevřeno, Hotovo)</option>
           {Object.entries(projectStatusLabels).map(([key, label]) => (
             <option key={key} value={key}>
               {label}

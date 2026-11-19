@@ -8,15 +8,11 @@ datasource db {
 }
 
 enum ProjectStatus {
-  NOVY
-  V_PRIPRAVE
-  CEKA_NA_KLIENTA
-  BEZI
-  V_INTERNI_KONTROLE
-  V_KLIENTSKE_KONTROLE
-  DOKONCENO
-  FAKTUROVANO
-  ARCHIVOVANO
+  CEKA
+  OTEVRENO
+  HOTOVO
+  UZAVRENO
+  ZRUSENO
 }
 
 enum TaskStatus {
@@ -88,7 +84,7 @@ model Project {
   id              String        @id @default(cuid())
   name            String
   description     String?
-  status          ProjectStatus @default(NOVY)
+  status      ProjectStatus @default(CEKA)
   clientId        String
   client          Client        @relation(fields: [clientId], references: [id])
   accountId       String?

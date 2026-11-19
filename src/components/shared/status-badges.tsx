@@ -7,27 +7,19 @@ import { Badge } from "@/components/ui/badge";
  *   emerald=běží, indigo=interní práce, teal=hotovo, stone=neutrální
  */
 const projectStatusStyles: Record<string, string> = {
-  NOVY: "badge-sky",
-  V_PRIPRAVE: "badge-amber",
-  CEKA_NA_KLIENTA: "badge-violet",
-  BEZI: "badge-emerald",
-  V_INTERNI_KONTROLE: "badge-indigo",
-  V_KLIENTSKE_KONTROLE: "badge-violet",
-  DOKONCENO: "badge-teal",
-  FAKTUROVANO: "badge-stone",
-  ARCHIVOVANO: "badge-stone opacity-70",
+  CEKA: "badge-amber",
+  OTEVRENO: "badge-emerald",
+  HOTOVO: "badge-teal",
+  UZAVRENO: "badge-indigo",
+  ZRUSENO: "badge-stone opacity-70",
 };
 
 const projectStatusLabels: Record<string, string> = {
-  NOVY: "Nový",
-  V_PRIPRAVE: "V přípravě",
-  CEKA_NA_KLIENTA: "Čeká na klienta",
-  BEZI: "Běží",
-  V_INTERNI_KONTROLE: "Interní kontrola",
-  V_KLIENTSKE_KONTROLE: "Klientská kontrola",
-  DOKONCENO: "Dokončeno",
-  FAKTUROVANO: "Fakturováno",
-  ARCHIVOVANO: "Archivováno",
+  CEKA: "Čeká",
+  OTEVRENO: "Otevřeno",
+  HOTOVO: "Hotovo",
+  UZAVRENO: "Uzavřeno",
+  ZRUSENO: "Zrušeno",
 };
 
 const taskStatusStyles: Record<string, string> = {

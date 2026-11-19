@@ -29,7 +29,7 @@ export default async function DashboardPage() {
   ]);
 
   const today = new Date();
-  const isClosed = (s: string) => ["DOKONCENO", "ARCHIVOVANO", "FAKTUROVANO"].includes(s);
+  const isClosed = (s: string) => ["UZAVRENO", "ZRUSENO"].includes(s);
 
   const overdueProjects = projects.filter(
     (p) => p.deadline && isBefore(p.deadline, today) && !isClosed(p.status)
@@ -49,7 +49,7 @@ export default async function DashboardPage() {
     dateStr: format(today, "EEEE d. MMMM yyyy", { locale: cs }),
     overdueCount: overdueProjects.length,
     atRiskCount: atRiskProjects.length,
-    activeCount: projects.filter((p) => p.status === "BEZI").length,
+    activeCount: projects.filter((p) => p.status === "OTEVRENO").length,
     totalProjects: projects.length,
     statusMap,
     tasks: myTasks.map((t: any) => ({

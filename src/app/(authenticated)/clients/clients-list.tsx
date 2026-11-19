@@ -26,10 +26,10 @@ export function ClientsList({ clients }: { clients: ClientListItem[] }) {
       {clients.map((client) => {
         const open = openId === client.id;
         const activeProjects = client.projects.filter(
-          (p) => !["DOKONCENO", "FAKTUROVANO", "ARCHIVOVANO"].includes(p.status)
+          (p) => !["UZAVRENO", "ZRUSENO"].includes(p.status)
         );
         const nextDeadline = client.projects
-          .filter((p) => p.deadline && !["DOKONCENO", "ARCHIVOVANO"].includes(p.status))
+          .filter((p) => p.deadline && !["UZAVRENO", "ZRUSENO"].includes(p.status))
           .map((p) => p.deadline!)
           .sort()[0];
 
