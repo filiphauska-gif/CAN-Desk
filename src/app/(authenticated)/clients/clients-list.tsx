@@ -84,7 +84,7 @@ export function ClientsList({ clients }: { clients: ClientListItem[] }) {
             {/* Expandable panel */}
             <div
               className={cn(
-                "grid transition-all duration-300 ease-out",
+                "peek-panel grid transition-[grid-template-rows,opacity] duration-200 ease-out",
                 open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
               )}
             >

@@ -350,3 +350,14 @@
 .page-enter {
   animation: page-enter 0.3s cubic-bezier(0.22, 0.82, 0.28, 1);
 }
+
+/* Accordion peek: no backdrop blur inside (blur recompute per frame = jank) */
+.peek-panel {
+  contain: layout paint;
+}
+.peek-panel .glass,
+.peek-panel .glass-strong {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+}
