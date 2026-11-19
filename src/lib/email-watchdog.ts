@@ -25,9 +25,17 @@ export async function generateFollowupTasks() {
     },
   });
 
+  const normSubject = (s: string | null) =>
+    (s || "?")
+      .toLowerCase()
+      .replace(/^(re|fw|fwd|aw|sv|odp)\s*(\[\d+\])?\s*:\s*/gi, "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 120);
+
   const threads = new Map<string, typeof emails>();
   for (const e of emails) {
-    const key = e.threadId || e.subject || "?";
+    const key = normSubject(e.subject);
     if (!threads.has(key)) threads.set(key, []);
     threads.get(key)!.push(e);
   }
