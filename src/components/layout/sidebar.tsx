@@ -15,11 +15,13 @@ import {
   LogOut,
   Menu,
   X,
+  Mail,
 } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/mail", label: "Pošta", icon: Mail },
   { href: "/projects", label: "Zakázky", icon: FolderKanban },
   { href: "/tasks", label: "Úkoly", icon: CheckSquare },
   { href: "/clients", label: "Klienti", icon: Users },
