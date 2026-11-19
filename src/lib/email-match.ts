@@ -8,7 +8,7 @@ export type EmailTarget = {
   reason: string;
 };
 
-const ACTIVE = { notIn: ["UZAVRENO", "ZRUSENO"] as const };
+const ACTIVE: any = { notIn: ["UZAVRENO", "ZRUSENO"] };
 
 export async function resolveEmailTarget(
   fromAddress: string,
@@ -22,7 +22,7 @@ export async function resolveEmailTarget(
   if (job) {
     const normalized = `JOB-${job[1].padStart(5, "0")}`;
     const project = await prisma.project.findFirst({
-      where: { jobNumber: { equals: normalized, mode: "insensitive" } },
+      where: { jobNumber: normalized },
       select: { id: true, clientId: true },
     });
     if (project) {
@@ -37,7 +37,7 @@ export async function resolveEmailTarget(
 
   // 2) sender is a known client contact
   const client = await prisma.client.findFirst({
-    where: { email: { equals: fromAddress, mode: "insensitive" } },
+    where: { email: fromAddress },
     select: { id: true, name: true },
   });
 
