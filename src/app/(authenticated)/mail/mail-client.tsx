@@ -227,10 +227,7 @@ export function MailClient({
               </div>
               <div className="flex-1 overflow-y-auto pr-1">
                 <div className="text-[13px] leading-relaxed text-[#292524] whitespace-pre-wrap break-words">
-                  {(selected.bodyText || selected.snippet || "").replace(/
-{3,}/g, "
-
-")}
+                  {selected.bodyText || selected.snippet}
                 </div>
               </div>
               <div className="border-t border-black/5 pt-3 mt-3 space-y-2">
