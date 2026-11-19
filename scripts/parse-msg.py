@@ -9,13 +9,13 @@ SRC = Path.home() / "OneDrive - COMTECH CAN s.r.o" / "Plocha" / "emaily"
 OUT = Path("scripts/emails.json")
 
 TAG_RE = re.compile(r"<[^>]+>")
-WS_RE = re.compile(r"\s+")
 
 
 def clean(text: str | None) -> str:
     if not text:
         return ""
-    t = TAG_RE.sub(" ", text)
+    t = re.sub(r"<(br|/p|/div|/tr|/li|/h[1-6])[^>]*>", "\n", text, flags=re.I)
+    t = TAG_RE.sub(" ", t)
     t = (
         t.replace("&nbsp;", " ")
         .replace("&amp;", "&")
@@ -23,7 +23,10 @@ def clean(text: str | None) -> str:
         .replace("&gt;", ">")
         .replace("&quot;", '"')
     )
-    return WS_RE.sub(" ", t).strip()
+    t = t.replace("\r\n", "\n").replace("\r", "\n")
+    t = re.sub(r"[ \t]+", " ", t)
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
 
 
 def norm(addr: str | None) -> str:
@@ -75,8 +78,7 @@ dated = [r for r in rows if r["date"]]
 print(f"parsed: {len(rows)} / errors: {errors}")
 print("date range:", min(r["date"] for r in dated)[:10], "->", max(r["date"] for r in dated)[:10])
 print("with JOB number in subject:", sum(1 for r in rows if re.search(r"job[-\s]?\d{4,5}", r["subject"], re.I)))
-print("threaded (in-reply-to or subject re:):", sum(1 for r in rows if r["in_reply_to"] or r["subject"].lower().startswith(("re:", "fw:", "aw:"))))
 from collections import Counter
 
 domains = Counter(r["from_addr"].split("@")[-1] for r in rows if "@" in r["from_addr"])
-print("top sender domains:", domains.most_common(8))
+print("top sender domains:", domains.most_common(5))

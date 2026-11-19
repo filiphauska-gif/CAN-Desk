@@ -225,8 +225,13 @@ export function MailClient({
                   )}
                 </div>
               </div>
-              <div className="flex-1 overflow-y-auto text-sm text-[#1C1917] whitespace-pre-wrap">
-                {selected.bodyText || selected.snippet}
+              <div className="flex-1 overflow-y-auto pr-1">
+                <div className="text-[13px] leading-relaxed text-[#292524] whitespace-pre-wrap break-words">
+                  {(selected.bodyText || selected.snippet || "").replace(/
+{3,}/g, "
+
+")}
+                </div>
               </div>
               <div className="border-t border-black/5 pt-3 mt-3 space-y-2">
                 <textarea
