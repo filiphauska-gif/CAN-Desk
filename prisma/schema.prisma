@@ -105,6 +105,9 @@ model Project {
   budgetDocuments BudgetDocument[]
   orders          Order[]
   attachments     Attachment[]
+
+  @@index([clientId])
+  @@index([status])
 }
 
 model BudgetDocument {
@@ -138,6 +141,9 @@ model BudgetDocument {
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
   lines             BudgetLine[]
+
+  @@index([projectId])
+  @@index([clientId])
 }
 
 model BudgetLine {
@@ -179,6 +185,8 @@ model BudgetLine {
   updatedAt            DateTime       @updatedAt
   children             BudgetLine[]   @relation("BudgetLineChildren")
   parent               BudgetLine?    @relation("BudgetLineChildren", fields: [parentLineId], references: [id])
+
+  @@index([budgetDocumentId])
 }
 
 model Task {
@@ -199,6 +207,9 @@ model Task {
   timeEntries TimeEntry[]
   assignments TaskAssignment[]
   attachments Attachment[]
+
+  @@index([projectId])
+  @@index([status])
 }
 
 model TaskAssignment {
@@ -212,6 +223,8 @@ model TaskAssignment {
   createdAt      DateTime @default(now())
 
   @@unique([taskId, userId])
+  @@index([taskId])
+  @@index([userId])
 }
 
 model Comment {
@@ -222,6 +235,8 @@ model Comment {
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
+
+  @@index([projectId])
 }
 
 model TimeEntry {
@@ -238,6 +253,9 @@ model TimeEntry {
   userId      String
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
+
+  @@index([projectId])
+  @@index([userId])
 }
 
 model Cost {
@@ -248,6 +266,8 @@ model Cost {
   projectId   String
   project     Project  @relation(fields: [projectId], references: [id])
   createdAt   DateTime @default(now())
+
+  @@index([projectId])
 }
 
 model BudgetItem {
@@ -279,6 +299,8 @@ model Invoice {
   date           DateTime      @default(now())
   note           String?
   createdAt      DateTime      @default(now())
+
+  @@index([projectId])
 }
 
 model InvoiceItem {
@@ -308,6 +330,8 @@ model Order {
   items           OrderItem[]
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+
+  @@index([projectId])
 }
 
 model OrderItem {
@@ -339,4 +363,7 @@ model Attachment {
   task         Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
   uploadedById String?
   createdAt    DateTime @default(now())
+
+  @@index([projectId])
+  @@index([taskId])
 }
