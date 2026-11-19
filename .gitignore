@@ -44,3 +44,11 @@ next-env.d.ts
 
 /src/generated/prisma
 DATABASE_URL.txt
+
+# jednorazove skripty s prihlasovacimi udaji
+scripts/import-projects.cjs
+scripts/backfill-job-numbers.cjs
+scripts/backfill-ce-numbers.cjs
+scripts/demo-budget-supabase.cjs
+scripts/vercel-setup.cjs
+scripts/vercel-env2.cjs
