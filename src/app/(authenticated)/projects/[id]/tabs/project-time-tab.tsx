@@ -107,7 +107,7 @@ export function ProjectTimeTab({
               <select name="taskId" className="w-full px-3 py-2 rounded-lg border border-white/40 text-sm bg-white">
                 <option value="">Bez úkolu</option>
                 {tasks
-                  .filter((t: any) => t.status !== "DONE")
+                  .filter((t: any) => t.status !== "HOTOVO")
                   .map((t: any) => (
                     <option key={t.id} value={t.id}>
                       {t.title.substring(0, 40)}

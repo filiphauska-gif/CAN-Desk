@@ -78,7 +78,7 @@ export default async function ProjectDetailPage({
     status: project.status,
     deadline: project.deadline,
     overdueTasks: project.tasks.filter(
-      (t: any) => t.deadline && t.deadline < new Date() && t.status !== "DONE"
+      (t: any) => t.deadline && t.deadline < new Date() && t.status !== "HOTOVO"
     ).length,
     workedHours: financeOverview.workedHours,
     plannedHours: financeOverview.plannedHours,

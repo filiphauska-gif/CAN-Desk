@@ -23,21 +23,21 @@ const projectStatusLabels: Record<string, string> = {
 };
 
 const taskStatusStyles: Record<string, string> = {
-  BACKLOG: "badge-stone",
-  TODO: "badge-sky",
-  IN_PROGRESS: "badge-indigo",
-  WAITING: "badge-amber",
-  REVIEW: "badge-violet",
-  DONE: "badge-teal",
+  PRIPRAVA: "badge-sky",
+  OTEVRENO: "badge-emerald",
+  V_PROCESU: "badge-indigo",
+  U_KLIENTA: "badge-amber",
+  HOTOVO: "badge-teal",
+  UZAVRENO: "badge-stone opacity-70",
 };
 
 const taskStatusLabels: Record<string, string> = {
-  BACKLOG: "Backlog",
-  TODO: "To do",
-  IN_PROGRESS: "In progress",
-  WAITING: "Waiting",
-  REVIEW: "Review",
-  DONE: "Done",
+  PRIPRAVA: "V přípravě",
+  OTEVRENO: "Otevřeno",
+  V_PROCESU: "V procesu",
+  U_KLIENTA: "U klienta",
+  HOTOVO: "Hotovo",
+  UZAVRENO: "Uzavřeno",
 };
 
 export function ProjectStatusBadge({ status }: { status: string }) {

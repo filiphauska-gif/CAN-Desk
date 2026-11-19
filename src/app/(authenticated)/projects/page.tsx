@@ -41,7 +41,7 @@ export default async function ProjectsPage({
     }),
     prisma.task.groupBy({
       by: ["projectId"],
-      where: { deadline: { lt: new Date() }, status: { not: "DONE" } },
+      where: { deadline: { lt: new Date() }, status: { not: "HOTOVO" } },
       _count: { id: true },
     }),
     prisma.timeEntry.groupBy({

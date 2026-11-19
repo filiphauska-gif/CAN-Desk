@@ -36,12 +36,11 @@ export function ProjectTasksTab({
   }, []);
 
   const columns = [
-    { key: "BACKLOG", label: "Backlog" },
-    { key: "TODO", label: "To do" },
-    { key: "IN_PROGRESS", label: "Probíhá" },
-    { key: "WAITING", label: "Čeká" },
-    { key: "REVIEW", label: "Revize" },
-    { key: "DONE", label: "Hotovo" },
+    { key: "PRIPRAVA", label: "V přípravě" },
+    { key: "OTEVRENO", label: "Otevřeno" },
+    { key: "V_PROCESU", label: "V procesu" },
+    { key: "U_KLIENTA", label: "U klienta" },
+    { key: "HOTOVO", label: "Hotovo" },
   ];
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

@@ -150,7 +150,7 @@ export async function duplicateProject(id: string) {
       data: {
         title: `${t.title} (kopie)`,
         description: t.description,
-        status: "TODO",
+        status: "OTEVRENO",
         priority: t.priority,
         projectId: copy.id,
         deadline: t.deadline,

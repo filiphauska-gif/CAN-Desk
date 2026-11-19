@@ -167,56 +167,35 @@ export function ProjectsList({ projects }: { projects: ProjectListItem[] }) {
                         {project.jobNumber}
                       </span>
                     )}
-                    <h3 className="font-medium text-[#1C1917] truncate">{project.name}</h3>
-                    <ProjectStatusBadge status={project.status} />
-                    {project.healthLevel && (
-                      <span
-                        className="inline-flex items-center gap-1 text-[11px] text-[#78716C]"
-                        title={project.healthDetail || project.healthLabel}
-                      >
-                        <span
-                          className={cn(
-                            "w-1.5 h-1.5 rounded-full",
-                            project.healthLevel === "risk"
-                              ? "bg-rose-500"
-                              : project.healthLevel === "warn"
-                              ? "bg-amber-400"
-                              : "bg-emerald-400"
-                          )}
-                        />
-                        {project.healthLabel}
-                      </span>
-                    )}
+                    <h3 className="font-medium text-[#1C1917] line-clamp-2">{project.name}</h3>
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1.5">
                     <span className="text-xs text-[#78716C]">{project.clientName}</span>
                     {project.accountName && (
                       <span className="text-xs text-[#78716C]">{project.accountName}</span>
                     )}
-                    {project.deadline && (
-                      <span className="text-xs text-[#78716C]">
-                        Deadline: {format(new Date(project.deadline), "d.M.yyyy")}
-                      </span>
-                    )}
+                    {project.deadline && (() => {
+                      const days = Math.ceil((new Date(project.deadline).getTime() - Date.now()) / 86400000);
+                      const cls = days < 0 ? "text-rose-600 font-medium" : days <= 2 ? "text-amber-600 font-medium" : "text-[#78716C]";
+                      return (
+                        <span className={"text-xs " + cls}>
+                          Deadline: {format(new Date(project.deadline), "d.M.yyyy")}
+                        </span>
+                      );
+                    })()}
                     {project.budgetAmount && (
                       <span className="text-xs text-[#78716C]">
                         Rozpočet: {project.budgetAmount.toLocaleString("cs-CZ")} Kč
                       </span>
                     )}
                   </div>
-                  {project.description && (
-                    <p className="text-xs text-[#A8A29E] mt-2 line-clamp-1">{project.description}</p>
-                  )}
                 </div>
                 <div className="flex items-center gap-4 shrink-0">
                   <div className="text-center">
                     <p className="text-sm font-medium text-[#1C1917]">{project.tasksCount}</p>
                     <p className="text-xs text-[#78716C]">úkolů</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm font-medium text-[#1C1917]">{project.timeCount}</p>
-                    <p className="text-xs text-[#78716C]">časů</p>
-                  </div>
+                  <ProjectStatusBadge status={project.status} />
                 </div>
               </div>
             </Link>

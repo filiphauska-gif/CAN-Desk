@@ -303,10 +303,10 @@ export async function getProjectQuickView(projectId: string): Promise<QuickView 
     },
     tasks: {
       total: project.tasks.length,
-      done: project.tasks.filter((t) => t.status === "DONE").length,
-      inProgress: project.tasks.filter((t) => t.status === "IN_PROGRESS").length,
+      done: project.tasks.filter((t) => t.status === "HOTOVO").length,
+      inProgress: project.tasks.filter((t) => t.status === "V_PROCESU").length,
       overdue: project.tasks.filter(
-        (t) => t.deadline && t.deadline < now && t.status !== "DONE"
+        (t) => t.deadline && t.deadline < now && t.status !== "HOTOVO"
       ).length,
       recent: project.tasks.slice(0, 5).map((t) => ({
         id: t.id,

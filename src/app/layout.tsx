@@ -17,6 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: "try{document.documentElement.dataset.fontSize=localStorage.getItem('can-font-size')||'medium'}catch(e){}" }} />
+      </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>

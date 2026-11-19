@@ -361,3 +361,6 @@
   backdrop-filter: none !important;
   background: rgba(255, 255, 255, 0.85) !important;
 }
+
+html[data-font-size="small"] { font-size: 14px; }
+html[data-font-size="large"] { font-size: 18px; }

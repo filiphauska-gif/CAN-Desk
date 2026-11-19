@@ -46,9 +46,9 @@ export function TasksList({
   const q = query.trim().toLowerCase();
   const visible = tasks
     .filter((t) => {
-      if (quick === "overdue") return t.deadline && t.status !== "DONE" && isBefore(new Date(t.deadline), now);
+      if (quick === "overdue") return t.deadline && t.status !== "HOTOVO" && isBefore(new Date(t.deadline), now);
       if (quick === "week")
-        return t.deadline && t.status !== "DONE" && !isBefore(addDays(now, 7), new Date(t.deadline));
+        return t.deadline && t.status !== "HOTOVO" && !isBefore(addDays(now, 7), new Date(t.deadline));
       return true;
     })
     .filter((t) =>
@@ -126,7 +126,7 @@ export function TasksList({
   }
 
   // Kanban drag & drop
-  const boardColumns = ["BACKLOG", "TODO", "IN_PROGRESS", "WAITING", "REVIEW", "DONE"];
+  const boardColumns = ["PRIPRAVA", "OTEVRENO", "V_PROCESU", "U_KLIENTA", "HOTOVO"];
 
   function onDragStart(e: React.DragEvent, taskId: string) {
     e.dataTransfer.setData("text/plain", taskId);
@@ -381,7 +381,7 @@ export function TasksList({
                           <span
                             className={cn(
                               "text-[10px]",
-                              task.status !== "DONE" &&
+                              task.status !== "HOTOVO" &&
                                 isBefore(new Date(task.deadline), new Date())
                                 ? "text-rose-500 font-medium"
                                 : "text-[#A8A29E]"
@@ -406,7 +406,7 @@ export function TasksList({
           <div className="divide-y divide-black/5">
             {visible.map((task) => {
             const overdue =
-              task.deadline && task.status !== "DONE" && isBefore(new Date(task.deadline), new Date());
+              task.deadline && task.status !== "HOTOVO" && isBefore(new Date(task.deadline), new Date());
             return (
               <div key={task.id} className="flex items-center gap-3 px-5 py-3 hover:bg-white/40 transition-colors">
                 <select

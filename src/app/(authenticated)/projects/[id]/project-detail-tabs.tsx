@@ -59,7 +59,7 @@ export function ProjectDetailTabs({
 
   // Overview tab content (default)
   const overdueTasks = project.tasks.filter(
-    (t: any) => t.deadline && new Date(t.deadline) < new Date() && t.status !== "DONE"
+    (t: any) => t.deadline && new Date(t.deadline) < new Date() && t.status !== "HOTOVO"
   );
 
   return (
@@ -110,11 +110,11 @@ export function ProjectDetailTabs({
                       <span
                         className={cn(
                           "w-2 h-2 rounded-full shrink-0",
-                          task.status === "DONE"
+                          task.status === "HOTOVO"
                             ? "bg-emerald-500"
-                            : task.status === "IN_PROGRESS"
+                            : task.status === "V_PROCESU"
                             ? "bg-amber-500"
-                            : task.status === "TODO"
+                            : task.status === "OTEVRENO"
                             ? "bg-sky-500"
                             : "bg-stone-300"
                         )}
