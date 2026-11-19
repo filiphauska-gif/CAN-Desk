@@ -35,166 +35,166 @@ enum UserRole {
 }
 
 model User {
-  id           String      @id @default(cuid())
-  email        String      @unique
+  id           String   @id @default(cuid())
+  email        String   @unique
   passwordHash String
   name         String
   role         UserRole
   hourlyRate   Float?
   phone        String?
   avatarUrl    String?
-  active       Boolean     @default(true)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   assignedTasks   Task[]
   taskAssignments TaskAssignment[]
-  budgetDocuments  BudgetDocument[]  @relation("BudgetOwner")
-  budgetManagerOf  BudgetDocument[]  @relation("BudgetAccountManager")
-  budgetProjectOf  BudgetDocument[]  @relation("BudgetProjectManager")
+  budgetDocuments BudgetDocument[] @relation("BudgetOwner")
+  budgetManagerOf BudgetDocument[] @relation("BudgetAccountManager")
+  budgetProjectOf BudgetDocument[] @relation("BudgetProjectManager")
   timeEntries     TimeEntry[]
   comments        Comment[]
-  accountProjects Project[]    @relation("AccountProjects")
+  accountProjects Project[]        @relation("AccountProjects")
   dashboardLayout String?
 }
 
 model Client {
-  id          String    @id @default(cuid())
-  name        String
-  email       String?
-  phone       String?
-  contactName String?
-  billingAddress String?
-  companyId   String?   // IČ
-  vatId       String?   // DIČ
-  defaultCurrency String? @default("CZK")
+  id                  String   @id @default(cuid())
+  name                String
+  email               String?
+  phone               String?
+  contactName         String?
+  billingAddress      String?
+  companyId           String? // IČ
+  vatId               String? // DIČ
+  defaultCurrency     String?  @default("CZK")
   defaultPaymentTerms String?
-  note        String?
-  active      Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  note                String?
+  active              Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
-  projects       Project[]
+  projects        Project[]
   budgetDocuments BudgetDocument[]
 }
 
 model Project {
-  jobNumber    String?       @unique
-  id           String        @id @default(cuid())
-  name         String
-  description  String?
-  status      ProjectStatus @default(CEKA)
-  clientId     String
-  client       Client        @relation(fields: [clientId], references: [id])
-  accountId    String?
-  account      User?         @relation("AccountProjects", fields: [accountId], references: [id])
-  deadline     DateTime?
-  budgetAmount Float?
-  budgetHours  Int?
-  discountPercent Float?  @default(0)
-  vatRate      Float?     @default(21)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  jobNumber       String?       @unique
+  id              String        @id @default(cuid())
+  name            String
+  description     String?
+  status          ProjectStatus @default(CEKA)
+  clientId        String
+  client          Client        @relation(fields: [clientId], references: [id])
+  accountId       String?
+  account         User?         @relation("AccountProjects", fields: [accountId], references: [id])
+  deadline        DateTime?
+  budgetAmount    Float?
+  budgetHours     Int?
+  discountPercent Float?        @default(0)
+  vatRate         Float?        @default(21)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
-  invoices    Invoice[]
-  tasks       Task[]
-  timeEntries TimeEntry[]
-  comments    Comment[]
-  costs       Cost[]
-  budgetItems BudgetItem[]
+  invoices        Invoice[]
+  tasks           Task[]
+  timeEntries     TimeEntry[]
+  comments        Comment[]
+  costs           Cost[]
+  budgetItems     BudgetItem[]
   budgetDocuments BudgetDocument[]
   orders          Order[]
   attachments     Attachment[]
 }
 
 model BudgetDocument {
-  id              String   @id @default(cuid())
-  documentNumber  String   @unique
-  title           String
-  type            String   @default("NABIDKA")
-  clientId        String
-  client          Client   @relation(fields: [clientId], references: [id])
-  projectId       String?
-  project         Project? @relation(fields: [projectId], references: [id])
-  contactPerson   String?
-  place           String?
-  date            DateTime @default(now())
-  validUntil      DateTime?
-  currency        String   @default("CZK")
-  paymentTerms    String?
-  ownerId         String
-  owner           User     @relation("BudgetOwner", fields: [ownerId], references: [id])
-  accountManagerId String?
-  accountManager  User?    @relation("BudgetAccountManager", fields: [accountManagerId], references: [id])
-  projectManagerId String?
-  projectManager  User?    @relation("BudgetProjectManager", fields: [projectManagerId], references: [id])
-  status          String   @default("ROZPRACOVANO")
-  clientStatus    String   @default("ROZPRACOVANO")
-  version         Int      @default(1)
+  id                String       @id @default(cuid())
+  documentNumber    String       @unique
+  title             String
+  type              String       @default("NABIDKA")
+  clientId          String
+  client            Client       @relation(fields: [clientId], references: [id])
+  projectId         String?
+  project           Project?     @relation(fields: [projectId], references: [id])
+  contactPerson     String?
+  place             String?
+  date              DateTime     @default(now())
+  validUntil        DateTime?
+  currency          String       @default("CZK")
+  paymentTerms      String?
+  ownerId           String
+  owner             User         @relation("BudgetOwner", fields: [ownerId], references: [id])
+  accountManagerId  String?
+  accountManager    User?        @relation("BudgetAccountManager", fields: [accountManagerId], references: [id])
+  projectManagerId  String?
+  projectManager    User?        @relation("BudgetProjectManager", fields: [projectManagerId], references: [id])
+  status            String       @default("ROZPRACOVANO")
+  clientStatus      String       @default("ROZPRACOVANO")
+  version           Int          @default(1)
   specificationHtml String?
-  summaryHtml     String?
-  discountPercent Float?   @default(0)
-  discountAmount  Float?   @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  lines           BudgetLine[]
+  summaryHtml       String?
+  discountPercent   Float?       @default(0)
+  discountAmount    Float?       @default(0)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  lines             BudgetLine[]
 }
 
 model BudgetLine {
-  id                   String   @id @default(cuid())
+  id                   String         @id @default(cuid())
   budgetDocumentId     String
   document             BudgetDocument @relation(fields: [budgetDocumentId], references: [id], onDelete: Cascade)
   parentLineId         String?
-  type                 String   @default("INTERNI_PRACE")
+  type                 String         @default("INTERNI_PRACE")
   code                 String?
   subject              String
   clientDescription    String?
   internalDescription  String?
-  quantity             Float    @default(1)
-  unit                 String   @default("ks")
-  unitCost             Float?   @default(0)
-  totalCost            Float?   @default(0)
-  markupUnit           Float?   @default(0)
-  markupPercent        Float?   @default(0)
-  unitPrice            Float?   @default(0)
+  quantity             Float          @default(1)
+  unit                 String         @default("ks")
+  unitCost             Float?         @default(0)
+  totalCost            Float?         @default(0)
+  markupUnit           Float?         @default(0)
+  markupPercent        Float?         @default(0)
+  unitPrice            Float?         @default(0)
   hourlyRate           Float?
   internalHourlyCost   Float?
   plannedHours         Float?
-  totalExclVat         Float?   @default(0)
-  vatRate              Float?   @default(21)
-  vatAmount            Float?   @default(0)
-  totalInclVat         Float?   @default(0)
-  discountPercent      Float?   @default(0)
-  discountAmount       Float?   @default(0)
-  plannedMargin        Float?   @default(0)
-  plannedMarginPercent Float?   @default(0)
+  totalExclVat         Float?         @default(0)
+  vatRate              Float?         @default(21)
+  vatAmount            Float?         @default(0)
+  totalInclVat         Float?         @default(0)
+  discountPercent      Float?         @default(0)
+  discountAmount       Float?         @default(0)
+  plannedMargin        Float?         @default(0)
+  plannedMarginPercent Float?         @default(0)
   supplier             String?
   deadline             DateTime?
   linkedTaskId         String?
-  isPrintable          Boolean  @default(true)
-  isInternalOnly       Boolean  @default(false)
-  sortOrder            Int      @default(0)
+  isPrintable          Boolean        @default(true)
+  isInternalOnly       Boolean        @default(false)
+  sortOrder            Int            @default(0)
   category             String?
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-  children             BudgetLine[] @relation("BudgetLineChildren")
-  parent               BudgetLine?  @relation("BudgetLineChildren", fields: [parentLineId], references: [id])
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  children             BudgetLine[]   @relation("BudgetLineChildren")
+  parent               BudgetLine?    @relation("BudgetLineChildren", fields: [parentLineId], references: [id])
 }
 
 model Task {
-  id              String     @id @default(cuid())
-  title           String
-  description     String?
-  status          TaskStatus @default(TODO)
-  priority        Int        @default(0)
-  projectId       String
-  project         Project    @relation(fields: [projectId], references: [id])
-  assigneeId      String?
-  assignee        User?      @relation(fields: [assigneeId], references: [id])
-  deadline        DateTime?
-  estimatedHours  Float?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id             String     @id @default(cuid())
+  title          String
+  description    String?
+  status         TaskStatus @default(TODO)
+  priority       Int        @default(0)
+  projectId      String
+  project        Project    @relation(fields: [projectId], references: [id])
+  assigneeId     String?
+  assignee       User?      @relation(fields: [assigneeId], references: [id])
+  deadline       DateTime?
+  estimatedHours Float?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 
   timeEntries TimeEntry[]
   assignments TaskAssignment[]
@@ -232,7 +232,7 @@ model TimeEntry {
   billable    Boolean  @default(true)
   entryType   String   @default("WORK") // WORK, VACATION, SICK, OTHER
   projectId   String?
-  project     Project?  @relation(fields: [projectId], references: [id])
+  project     Project? @relation(fields: [projectId], references: [id])
   taskId      String?
   task        Task?    @relation(fields: [taskId], references: [id])
   userId      String
@@ -251,34 +251,34 @@ model Cost {
 }
 
 model BudgetItem {
-  id          String   @id @default(cuid())
-  name        String
-  quantity    Float    @default(1)
-  unit        String   @default("ks")
-  unitPrice   Float
-  total       Float
-  type        String   @default("REVENUE") // REVENUE or COST
-  order       Int      @default(0)
-  projectId   String
-  project     Project  @relation(fields: [projectId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String
+  quantity  Float    @default(1)
+  unit      String   @default("ks")
+  unitPrice Float
+  total     Float
+  type      String   @default("REVENUE") // REVENUE or COST
+  order     Int      @default(0)
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Invoice {
   dueDate        DateTime?
-  status         String    @default("VYSTAVENA")
+  status         String        @default("VYSTAVENA")
   clientSnapshot String?
   items          InvoiceItem[]
-  id        String   @id @default(cuid())
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  type      String   @default("ISSUED") // ISSUED = vydaná klientovi, RECEIVED = přijatá nákladová
-  number    String?
-  amount    Float
-  date      DateTime @default(now())
-  note      String?
-  createdAt DateTime @default(now())
+  id             String        @id @default(cuid())
+  projectId      String
+  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  type           String        @default("ISSUED") // ISSUED = vydaná klientovi, RECEIVED = přijatá nákladová
+  number         String?
+  amount         Float
+  date           DateTime      @default(now())
+  note           String?
+  createdAt      DateTime      @default(now())
 }
 
 model InvoiceItem {
@@ -311,15 +311,15 @@ model Order {
 }
 
 model OrderItem {
-  id          String  @id @default(cuid())
+  id          String @id @default(cuid())
   orderId     String
-  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order       Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   description String
-  quantity    Float   @default(1)
-  unit        String  @default("ks")
-  unitPrice   Float   @default(0)
-  total       Float   @default(0)
-  sortOrder   Int     @default(0)
+  quantity    Float  @default(1)
+  unit        String @default("ks")
+  unitPrice   Float  @default(0)
+  total       Float  @default(0)
+  sortOrder   Int    @default(0)
 }
 
 model Counter {

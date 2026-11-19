@@ -27,14 +27,13 @@ export default async function ProjectsPage({
     accountId: params.accountId,
     search: params.search,
   };
-  const allProjects = await getProjects(filters);
+  const [allProjects, clients] = await Promise.all([getProjects(filters), getClients()]);
   const projects =
     filters.status === "ALL"
       ? allProjects
       : filters.status
         ? allProjects.filter((p: any) => p.status === filters.status)
-        : allProjects.filter((p: any) => !["UZAVRENO", "ZRUSENO"].includes(p.status));
-  const clients = await getClients();
+        : allProjects.filter((p: any) => !["UZAVRENO", "ZRUSENO"].includes(p.status));
   const [users, overdueGroup, hoursGroup, budgetDocs] = await Promise.all([
     prisma.user.findMany({
       where: { active: true },
