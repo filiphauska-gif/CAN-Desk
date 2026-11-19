@@ -125,7 +125,7 @@ export async function getMyTasks(userId: string) {
         { assigneeId: userId },
         { assignments: { some: { userId } } },
       ],
-      status: { notIn: ["HOTOVO"] },
+      status: { notIn: ["HOTOVO", "UZAVRENO"] },
     },
     include: {
       project: { select: { id: true, name: true, client: { select: { name: true } } } },

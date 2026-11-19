@@ -59,8 +59,14 @@ export default async function DashboardPage() {
       priority: t.priority,
       deadline: t.deadline ? new Date(t.deadline).toISOString() : null,
       overdue: t.deadline ? isBefore(new Date(t.deadline), today) : false,
-      projectName: t.project.name,
-      clientName: t.project.client?.name ?? null,
+      note:
+        (t.description || "")
+          .replace(/\[\[auto:[^\]]+\]\]/g, "")
+          .split("\n")[0]
+          .replace(/^Automaticky z pošty:\s*/i, "")
+          .trim() || null,
+      projectName: t.project?.name ?? null,
+      clientName: t.project?.client?.name ?? null,
       projectId: t.projectId,
     })),
     overdueProjects: overdueProjects.slice(0, 5).map((p) => ({

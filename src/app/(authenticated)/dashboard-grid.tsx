@@ -32,6 +32,7 @@ export type DashboardData = {
     priority: number;
     deadline: string | null;
     overdue: boolean;
+    note?: string | null;
     projectName: string;
     clientName: string | null;
     projectId: string;
@@ -154,13 +155,13 @@ function TasksWidget({ d }: { d: DashboardData }) {
       <div className="divide-y divide-black/5">
         {d.tasks.slice(0, 12).map((t) => (
           <Link key={t.id} href={`/projects/${t.projectId}`} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/40 transition-colors">
-            <TaskStatusBadge status={t.status} />
             <div className="flex-1 min-w-0">
               <p className="text-sm text-[#1C1917] truncate">{t.title}</p>
               <p className="text-xs text-[#78716C] truncate">
-                {t.projectName}
+                {t.projectName || "Bez zakázky"}
                 {t.clientName && ` • ${t.clientName}`}
               </p>
+              {t.note && <p className="text-[11px] text-[#A8A29E] truncate">{t.note}</p>}
             </div>
             {t.priority > 0 && <PriorityBadge priority={t.priority} />}
             {t.deadline && (
