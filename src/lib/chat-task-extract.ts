@@ -103,6 +103,8 @@ export async function extractChatTask(text: string): Promise<ExtractedTask | nul
   let title = text
     .replace(GREETING, "")
     .replace(FILLER, "")
+    .replace(/^do\s+[^,]{0,25}?\d{1,2}\.\s*\d{1,2}\.?\s*(\d{4})?\s*[:,]?\s*/i, "")
+    .replace(/máme\s+(udělat|udelat|připravit|pripravit)/i, "$1")
     .replace(/\s+/g, " ")
     .trim();
   if (title.length > 120) title = title.slice(0, 117) + "...";
