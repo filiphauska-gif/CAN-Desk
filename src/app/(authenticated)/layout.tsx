@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { PageTransition } from "@/components/layout/page-transition";
+import { ChatWidget } from "./chat-widget";
 
 export default async function AuthenticatedLayout({
   children,

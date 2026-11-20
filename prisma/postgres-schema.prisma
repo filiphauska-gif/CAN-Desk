@@ -56,6 +56,8 @@ model User {
   comments        Comment[]
   accountProjects Project[]        @relation("AccountProjects")
   dashboardLayout String?
+  chatMessages    ChatMessage[]
+  chatMemberships ChatMember[]
 }
 
 model Client {
@@ -111,6 +113,7 @@ model Project {
   emails          Email[]
   @@index([clientId])
   @@index([status])
+  chatRooms       ChatRoom[]
 }
 
 model BudgetDocument {
@@ -401,3 +404,43 @@ model Email {
   @@index([projectId])
   @@index([accountId])
 }
+
+model ChatRoom {
+  id        String        @id @default(cuid())
+  name      String
+  kind      String        @default("GENERAL")
+  projectId String?
+  project   Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdAt DateTime      @default(now())
+  messages  ChatMessage[]
+  members   ChatMember[]
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  roomId    String
+  room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  body      String
+  createdAt DateTime @default(now())
+
+  @@index([roomId, createdAt])
+}
+
+model ChatMember {
+  id         String   @id @default(cuid())
+  roomId     String
+  room       ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastReadAt DateTime @default(now())
+
+  @@unique([roomId, userId])
+}
+
+
+
+
+
+
