@@ -22,6 +22,7 @@ export default async function AuthenticatedLayout({
           <PageTransition>{children}</PageTransition>
         </div>
       </main>
+      <ChatWidget meId={(session.user as any).id} />
     </div>
   );
 }
