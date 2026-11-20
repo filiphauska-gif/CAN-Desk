@@ -397,3 +397,9 @@ html[data-font-size="large"] { font-size: 18px; }
   .widget-titlebar { cursor: default; }
   main { padding-bottom: 6rem !important; }
 }
+
+@keyframes sheet-in {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.anim-sheet-in { animation: sheet-in 0.28s cubic-bezier(0.22, 1, 0.36, 1); }

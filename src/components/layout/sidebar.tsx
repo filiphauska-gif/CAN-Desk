@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -12,13 +11,12 @@ import {
   Clock,
   Wallet,
   Settings,
-  LogOut,
-  Menu,
-  X,
   Mail,
   MessageSquare,
+  MoreHorizontal,
+  X,
 } from "lucide-react";
-import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { ProfileMenu } from "./profile-menu";
 
 const navItems = [
@@ -33,92 +31,126 @@ const navItems = [
   { href: "/settings", label: "Nastavení", icon: Settings },
 ];
 
-const roleLabels: Record<string, string> = {
-  ADMIN: "Admin",
-  ACCOUNT_MANAGER: "Account Manager",
-  PROJECT_MANAGER: "Project Manager",
-  KREATIVEC: "Kreativec",
-  PRODUKCNI: "Produkční",
-  EXTERNISTA: "Externista",
-  FINANCE: "Finance",
-};
+/* four primary tabs on mobile + "Více" */
+const primaryTabs = navItems.filter((i) =>
+  ["/", "/mail", "/projects", "/tasks"].includes(i.href)
+);
+const moreItems = navItems.filter((i) => !primaryTabs.some((p) => p.href === i.href));
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const user = session?.user as any;
-
-  const content = (
-    <div className="flex flex-col h-full glass-strong rounded-2xl overflow-hidden">
-      {/* Logo */}
-      <div className="px-5 py-5 border-b border-black/5">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6E70F5] to-[#8B5CF6] flex items-center justify-center text-white text-sm font-bold shadow-[0_4px_14px_rgba(99,102,241,0.45),inset_0_1px_1px_rgba(255,255,255,0.4)]">
-            CD
-          </div>
-          <div>
-            <span className="font-semibold text-[#1C1917] text-sm">CAN Desk</span>
-            <p className="text-[10px] text-[#78716C] leading-tight">Can Agency</p>
-          </div>
-        </Link>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200",
-                isActive
-                  ? "bg-gradient-to-br from-[#6E70F5] to-[#5B5EE8] text-white shadow-[0_4px_16px_-2px_rgba(99,102,241,0.5),inset_0_1px_1px_rgba(255,255,255,0.3)]"
-                  : "text-[#57534E] hover:bg-white/50 hover:text-[#1C1917]"
-              )}
-            >
-              <item.icon className="w-4 h-4 shrink-0" />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Profile + notifications + logout */}
-      <ProfileMenu />
-    </div>
-  );
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   return (
     <>
-      {/* Mobile trigger */}
-      <button
-        onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed top-3 left-3 z-50 lg:hidden glass rounded-xl p-2"
-      >
-        {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
+      {/* ---------- Desktop sidebar ---------- */}
+      <div className="hidden lg:block fixed top-0 left-0 bottom-0 w-[16.5rem] p-3">
+        <div className="flex flex-col h-full glass-strong rounded-2xl overflow-hidden">
+          <div className="px-5 py-5 border-b border-black/5">
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6E70F5] to-[#8B5CF6] flex items-center justify-center text-white text-sm font-bold shadow-[0_4px_14px_rgba(99,102,241,0.45),inset_0_1px_1px_rgba(255,255,255,0.4)]">
+                CD
+              </div>
+              <div>
+                <span className="font-semibold text-[#1C1917] text-sm">CAN Desk</span>
+                <p className="text-[10px] text-[#78716C] leading-tight">Can Agency</p>
+              </div>
+            </Link>
+          </div>
 
-      {/* Desktop sidebar — floating glass panel */}
-      <aside className="hidden lg:block lg:w-[16.5rem] shrink-0">
-        <div className="fixed top-0 left-0 bottom-0 w-[16.5rem] p-3">
-          {content}
+          <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200",
+                  isActive(item.href)
+                    ? "bg-gradient-to-br from-[#6E70F5] to-[#5B5EE8] text-white shadow-[0_4px_16px_-2px_rgba(99,102,241,0.5),inset_0_1px_1px_rgba(255,255,255,0.3)]"
+                    : "text-[#57534E] hover:bg-white/50 hover:text-[#1C1917]"
+                )}
+              >
+                <item.icon className="w-4 h-4 shrink-0" />
+                <span>{item.label}</span>
+              </Link>
+            ))}
+          </nav>
+
+          <ProfileMenu />
         </div>
-      </aside>
+      </div>
 
-      {/* Mobile sidebar overlay */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div
-            className="fixed inset-0 bg-black/25 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
+      {/* ---------- Mobile: bottom tab bar ---------- */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+        <div className="glass-strong rounded-2xl shadow-[0_-8px_30px_rgba(76,71,106,0.18)] grid grid-cols-5 px-1 py-1.5">
+          {primaryTabs.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-xl text-[10px] font-medium transition-colors",
+                isActive(item.href)
+                  ? "text-[#6366F1] bg-[#6366F1]/10"
+                  : "text-[#78716C] hover:text-[#1C1917]"
+              )}
+            >
+              <item.icon className="w-5 h-5" />
+              <span>{item.label}</span>
+            </Link>
+          ))}
+          <button
+            onClick={() => setSheetOpen(true)}
+            className="flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-xl text-[10px] font-medium text-[#78716C] hover:text-[#1C1917]"
+          >
+            <MoreHorizontal className="w-5 h-5" />
+            <span>Více</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* ---------- Mobile: "Více" bottom sheet ---------- */}
+      {sheetOpen && (
+        <div className="lg:hidden fixed inset-0 z-50">
+          <button
+            aria-label="Zavřít"
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setSheetOpen(false)}
           />
-          <aside className="fixed left-0 top-0 bottom-0 w-64 z-50 p-3">
-            {content}
-          </aside>
+          <div className="absolute bottom-0 inset-x-0 rounded-t-3xl bg-white/95 backdrop-blur-xl border-t border-white/60 shadow-[0_-16px_50px_rgba(76,71,106,0.3)] anim-sheet-in">
+            <div className="flex items-center justify-between px-5 pt-4 pb-2">
+              <p className="text-sm font-semibold text-[#1C1917]">Menu</p>
+              <button
+                onClick={() => setSheetOpen(false)}
+                className="p-1.5 rounded-lg text-[#78716C] hover:bg-black/5"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="px-3 pb-2 grid grid-cols-3 gap-2">
+              {moreItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setSheetOpen(false)}
+                  className={cn(
+                    "flex flex-col items-center gap-1.5 py-3 rounded-2xl text-[11px] font-medium transition-colors",
+                    isActive(item.href)
+                      ? "bg-[#6366F1] text-white"
+                      : "bg-black/[0.04] text-[#57534E]"
+                  )}
+                >
+                  <item.icon className="w-5 h-5" />
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="border-t border-black/5">
+              <ProfileMenu />
+            </div>
+          </div>
         </div>
       )}
     </>

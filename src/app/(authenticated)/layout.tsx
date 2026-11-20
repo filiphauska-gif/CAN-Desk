@@ -17,7 +17,7 @@ export default async function AuthenticatedLayout({
       {/* Aurora mesh background — gives the glass something to refract */}
       <div className="liquid-bg" aria-hidden />
       <Sidebar />
-      <main className="flex-1 min-w-0 p-4 lg:py-6 lg:pr-6 lg:pl-3 pt-16 overflow-auto">
+      <main className="flex-1 min-w-0 p-4 pt-4 pb-24 lg:py-6 lg:pr-6 lg:pl-3 lg:pb-6 overflow-auto">
         <div className="max-w-[1440px] mx-auto w-full">
           <PageTransition>{children}</PageTransition>
         </div>
