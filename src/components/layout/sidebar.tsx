@@ -19,6 +19,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { useState } from "react";
+import { ProfileMenu } from "./profile-menu";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -63,14 +64,6 @@ export function Sidebar() {
         </Link>
       </div>
 
-      {/* User info */}
-      {user && (
-        <div className="px-5 py-3 border-b border-black/5">
-          <p className="text-sm font-medium text-[#1C1917] truncate">{user.name}</p>
-          <p className="text-xs text-[#78716C]">{roleLabels[user.role] || user.role}</p>
-        </div>
-      )}
-
       {/* Navigation */}
       <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
@@ -94,16 +87,8 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Logout */}
-      <div className="px-3 pb-4">
-        <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-[#78716C] hover:bg-white/50 hover:text-[#1C1917] transition-colors w-full"
-        >
-          <LogOut className="w-4 h-4 shrink-0" />
-          <span>Odhlásit se</span>
-        </button>
-      </div>
+      {/* Profile + notifications + logout */}
+      <ProfileMenu />
     </div>
   );
 

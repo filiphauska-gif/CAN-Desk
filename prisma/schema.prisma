@@ -446,3 +446,17 @@ model ChatMember {
 
   @@unique([roomId, userId])
 }
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String    @default("COMMENT")
+  title     String
+  body      String?
+  link      String?
+  projectId String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, readAt])
+}

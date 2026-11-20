@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/db";
+import { notifyProjectComment } from "@/server/actions/notifications";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 
@@ -15,5 +16,6 @@ export async function addComment(projectId: string, content: string) {
       authorId: (session.user as any).id,
     },
   });
+  await notifyProjectComment(projectId, (session.user as any).id, content);
   revalidatePath(`/projects/${projectId}`);
 }
