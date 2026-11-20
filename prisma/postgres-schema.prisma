@@ -418,6 +418,7 @@ model ChatRoom {
 
 model ChatMessage {
   id        String   @id @default(cuid())
+  kind      String   @default("USER")
   roomId    String
   room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
   authorId  String

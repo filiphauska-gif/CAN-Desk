@@ -52,3 +52,4 @@ scripts/backfill-ce-numbers.cjs
 scripts/demo-budget-supabase.cjs
 scripts/vercel-setup.cjs
 scripts/vercel-env2.cjs
+schema.sqlite.bak
