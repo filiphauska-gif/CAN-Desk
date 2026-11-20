@@ -60,7 +60,7 @@ export function NewProjectDialog({ users }: { users: { id: string; name: string;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (v) loadClients(); }}>
-      <DialogTrigger className="inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent btn-glass-primary text-white hover:bg-[#4F46E5] px-2.5 h-8 gap-1.5 text-sm font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
+      <DialogTrigger className="inline-flex shrink-0 items-center justify-center rounded-full border border-transparent btn-glass-primary text-white hover:bg-[#4F46E5] px-4 h-9 gap-1.5 text-sm font-medium whitespace-nowrap transition-all outline-none select-none cursor-pointer [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
           <Plus className="w-4 h-4" />
           Nová zakázka
       </DialogTrigger>

@@ -117,7 +117,7 @@ function Shell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="glass rounded-xl h-full flex flex-col min-h-0">
+    <div className="glass rounded-[24px] h-full flex flex-col min-h-0 shadow-[0_22px_60px_-28px_rgba(76,71,106,0.45)] transition-transform duration-300 hover:-translate-y-0.5">
       <div className="widget-titlebar flex items-center justify-between px-4 py-2.5 border-b border-black/5 shrink-0 select-none">
         <h2 className="text-sm font-semibold text-[#1C1917]">{title}</h2>
         {action}
@@ -307,7 +307,7 @@ export function DashboardGrid({
       <>
         <div className="grid-stack-item" gs-id="stats" gs-x="0" gs-y="0" gs-w="12" gs-h="3" gs-min-w="6" gs-min-h="2">
           <div className="grid-stack-item-content">
-            <div className="glass rounded-xl h-full"><StatsWidget d={data} /></div>
+            <div className="glass rounded-[24px] h-full shadow-[0_22px_60px_-28px_rgba(76,71,106,0.45)]"><StatsWidget d={data} /></div>
           </div>
         </div>
         <div className="grid-stack-item" gs-id="tasks" gs-x="0" gs-y="3" gs-w="6" gs-h="7" gs-min-w="3" gs-min-h="3">

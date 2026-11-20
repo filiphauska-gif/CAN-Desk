@@ -376,3 +376,24 @@
 
 html[data-font-size="small"] { font-size: 14px; }
 html[data-font-size="large"] { font-size: 18px; }
+
+/* ---- Mobile: dashboard widgets stack naturally (no gridstack abs positioning) ---- */
+@media (max-width: 767px) {
+  .grid-stack { display: block !important; height: auto !important; }
+  .grid-stack-item {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    margin: 0 0 12px 0 !important;
+    padding: 0 !important;
+  }
+  .grid-stack-item-content {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .ui-resizable-handle { display: none !important; }
+  .widget-titlebar { cursor: default; }
+  main { padding-bottom: 6rem !important; }
+}
