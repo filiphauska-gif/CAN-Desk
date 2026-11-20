@@ -153,15 +153,31 @@ export async function chatUnreadCount() {
     where: { userId: user.id },
     select: { roomId: true, lastReadAt: true },
   });
+
   let total = 0;
+  let latest: { id: string; senderName: string; body: string; roomId: string } | null = null;
+
   for (const m of memberships) {
-    total += await prisma.chatMessage.count({
-      where: {
-        roomId: m.roomId,
-        authorId: { not: user.id },
-        createdAt: { gt: m.lastReadAt },
-      },
+    const where = {
+      roomId: m.roomId,
+      authorId: { not: user.id },
+      createdAt: { gt: m.lastReadAt },
+    };
+    total += await prisma.chatMessage.count({ where });
+    const last = await prisma.chatMessage.findFirst({
+      where,
+      orderBy: { createdAt: "desc" },
+      include: { author: { select: { name: true } } },
     });
+    if (last && (!latest || true)) {
+      latest = {
+        id: last.id,
+        senderName: last.author.name,
+        body: last.body.slice(0, 80),
+        roomId: m.roomId,
+      };
+    }
   }
-  return total;
+
+  return { total, latest };
 }

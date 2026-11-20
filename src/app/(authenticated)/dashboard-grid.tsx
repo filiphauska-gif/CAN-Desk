@@ -340,6 +340,10 @@ export function DashboardGrid({
           column: 12,
           cellHeight: 44,
           margin: 6,
+          columnOpts: {
+            breakpointForWindow: true,
+            breakpoints: [{ w: 768, c: 1 }],
+          },
           handle: ".widget-titlebar",
           draggable: { cancel: "a, button, input, select, textarea" },
           resizable: { handles: "e, w, s, se, sw" },
@@ -368,6 +372,8 @@ export function DashboardGrid({
       grid.on("change", () => {
         clearTimeout(timer);
         timer = setTimeout(() => {
+          // Never persist a mobile (single column) layout over the desktop one
+          if ((grid.getColumn?.() ?? 12) !== 12) return;
           // Read authoritative state from the engine (always complete values)
           const layout = (grid.engine?.nodes || [])
             .filter((n: any) => n.id && [n.x, n.y, n.w, n.h].every((v: any) => typeof v === "number" && Number.isFinite(v)))
