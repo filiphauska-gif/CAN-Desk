@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -31,7 +31,6 @@ const navItems = [
   { href: "/settings", label: "Nastavení", icon: Settings },
 ];
 
-/* four primary tabs on mobile + "Více" */
 const primaryTabs = navItems.filter((i) =>
   ["/", "/mail", "/projects", "/tasks"].includes(i.href)
 );
@@ -40,7 +39,32 @@ const moreItems = navItems.filter((i) => !primaryTabs.some((p) => p.href === i.h
 export function Sidebar() {
   const pathname = usePathname();
   const [sheetOpen, setSheetOpen] = useState(false);
+  const navRef = useRef<HTMLElement | null>(null);
+  const [pill, setPill] = useState<{ top: number; height: number } | null>(null);
+  const [animate, setAnimate] = useState(false);
+
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
+
+  const measurePill = () => {
+    const idx = navItems.findIndex((i) => isActive(i.href));
+    const links = navRef.current?.querySelectorAll<HTMLAnchorElement>("a[data-nav]");
+    const el = links?.[idx];
+    if (el) setPill({ top: el.offsetTop, height: el.offsetHeight });
+  };
+
+  useLayoutEffect(() => {
+    measurePill();
+    // enable sliding only after the first placement
+    const id = requestAnimationFrame(() => setAnimate(true));
+    return () => cancelAnimationFrame(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  useEffect(() => {
+    window.addEventListener("resize", measurePill);
+    return () => window.removeEventListener("resize", measurePill);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <>
@@ -59,22 +83,37 @@ export function Sidebar() {
             </Link>
           </div>
 
-          <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
+          <nav ref={navRef} className="relative flex-1 px-3 py-3 overflow-y-auto">
+            {/* sliding active pill */}
+            {pill && (
+              <span
+                aria-hidden
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200",
-                  isActive(item.href)
-                    ? "bg-gradient-to-br from-[#6E70F5] to-[#5B5EE8] text-white shadow-[0_4px_16px_-2px_rgba(99,102,241,0.5),inset_0_1px_1px_rgba(255,255,255,0.3)]"
-                    : "text-[#57534E] hover:bg-white/50 hover:text-[#1C1917]"
+                  "absolute left-3 right-3 rounded-xl bg-gradient-to-br from-[#6E70F5] to-[#5B5EE8] shadow-[0_6px_20px_-4px_rgba(99,102,241,0.55),inset_0_1px_1px_rgba(255,255,255,0.3)]",
+                  animate && "transition-[transform,height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
                 )}
-              >
-                <item.icon className="w-4 h-4 shrink-0" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
+                style={{ transform: `translateY(${pill.top}px)`, height: pill.height }}
+              />
+            )}
+
+            <div className="space-y-1">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  data-nav
+                  href={item.href}
+                  className={cn(
+                    "relative z-10 flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-colors duration-200",
+                    isActive(item.href)
+                      ? "text-white"
+                      : "text-[#57534E] hover:text-[#1C1917] hover:bg-white/40"
+                  )}
+                >
+                  <item.icon className="w-4 h-4 shrink-0" />
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
           </nav>
 
           <ProfileMenu />
