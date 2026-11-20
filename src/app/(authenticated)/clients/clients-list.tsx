@@ -36,8 +36,8 @@ export function ClientsList({ clients }: { clients: ClientListItem[] }) {
         return (
           <div key={client.id} className="glass rounded-xl relative transition-all">
             <Link href={`/clients/${client.id}`} className="block p-5 pr-14">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start gap-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-white/35 flex items-center justify-center shrink-0">
                     <Building2 className="w-5 h-5 text-[#78716C]" />
                   </div>
@@ -67,7 +67,7 @@ export function ClientsList({ clients }: { clients: ClientListItem[] }) {
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-sm font-medium text-[#1C1917]">{client.projectsCount}</p>
-                  <p className="text-xs text-[#78716C]">projektů</p>
+                  <p className="text-xs text-[#78716C]">zakázek</p>
                 </div>
               </div>
             </Link>
@@ -90,9 +90,13 @@ export function ClientsList({ clients }: { clients: ClientListItem[] }) {
             >
               <div className="overflow-hidden">
                 <div className="px-5 pb-5 border-t border-black/5">
-                  <div className="flex justify-end pt-2">
-                    <button onClick={() => setOpenId(null)} title="Sbalit náhled" className="inline-flex items-center gap-1 text-xs text-[#6366F1] hover:underline">
-                      <ChevronDown className="w-3.5 h-3.5 rotate-180" /> Sbalit
+                  <div className="flex justify-end pt-1">
+                    <button
+                      onClick={() => setOpenId(null)}
+                      title="Sbalit náhled"
+                      className="p-1.5 rounded-lg text-[#A8A29E] hover:text-[#6366F1] hover:bg-white/70 transition-colors"
+                    >
+                      <ChevronDown className="w-4 h-4 rotate-180" />
                     </button>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">

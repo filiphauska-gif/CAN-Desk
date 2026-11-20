@@ -24,6 +24,7 @@ export function ChatWidget({ meId }: { meId: string }) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [text, setText] = useState("");
   const [unread, setUnread] = useState(0);
+  const [showEmoji, setShowEmoji] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -133,7 +134,6 @@ export function ChatWidget({ meId }: { meId: string }) {
                     className="w-full text-left px-4 py-3 hover:bg-white/70 transition-colors"
                   >
                     <p className="text-sm text-[#1C1917]">{p.name}</p>
-                    <p className="text-[11px] text-[#A8A29E]">{p.role}</p>
                   </button>
                 ))}
                 {filtered.length === 0 && (
@@ -177,7 +177,23 @@ export function ChatWidget({ meId }: { meId: string }) {
                   <p className="text-center text-xs text-[#A8A29E] py-6">Zatím žádné zprávy. Napište první.</p>
                 )}
               </div>
+              {showEmoji && (
+                <div className="border-t border-black/5 px-2 py-2 grid grid-cols-8 gap-1">
+                  {["👍","🙏","😀","😂","🎉","❤️","🔥","👀","✅","⚠️","📌","🚀","👋","🤝","💪","☕"].map((e) => (
+                    <button key={e} onClick={() => { setText((t) => t + e); setShowEmoji(false); }} className="text-lg hover:bg-white/70 rounded p-0.5">
+                      {e}
+                    </button>
+                  ))}
+                </div>
+              )}
               <div className="border-t border-black/5 p-2 flex gap-2">
+                <button
+                  onClick={() => setShowEmoji((v) => !v)}
+                  className="p-2 rounded-lg text-[#78716C] hover:bg-white/70"
+                  title="Emoji"
+                >
+                  😊
+                </button>
                 <input
                   value={text}
                   onChange={(e) => setText(e.target.value)}

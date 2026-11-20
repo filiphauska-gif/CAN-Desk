@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import {
   ArrowRight,
   AlertTriangle,
+  Check,
   CheckSquare,
   Clock,
   FolderKanban,
@@ -14,6 +15,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProjectStatusBadge, TaskStatusBadge, PriorityBadge } from "@/components/shared/status-badges";
+import { completeTask } from "@/server/actions/tasks";
+import { useRouter } from "next/navigation";
 import { saveDashboardLayout, resetDashboardLayout } from "@/server/actions/dashboard";
 
 /* ---------------- types ---------------- */
@@ -64,6 +67,18 @@ const GRID_EDIT_CSS = `
   }
   .dashboard-grid .grid-stack-item:hover > .grid-stack-item-content {
     box-shadow: 0 14px 34px -14px rgba(76,71,106,.22);
+  }
+
+  /* Drop placeholder + dragged widget: rounded, matching widget corners */
+  .dashboard-grid .grid-stack-placeholder > .placeholder-content {
+    border-radius: .75rem !important;
+    background: rgba(99, 102, 241, 0.06) !important;
+    border: 1px dashed rgba(99, 102, 241, 0.28) !important;
+    box-shadow: none !important;
+  }
+  .dashboard-grid .ui-draggable-dragging > .grid-stack-item-content {
+    border-radius: .75rem !important;
+    box-shadow: 0 18px 44px -16px rgba(28, 25, 23, 0.28) !important;
   }
 
   /* Invisible resize hit-zones — custom outlined cursors on hover */
@@ -140,6 +155,7 @@ function StatsWidget({ d }: { d: DashboardData }) {
 }
 
 function TasksWidget({ d }: { d: DashboardData }) {
+  const router = useRouter();
   return (
     <Shell
       title="Moje úkoly"
@@ -154,22 +170,30 @@ function TasksWidget({ d }: { d: DashboardData }) {
       )}
       <div className="divide-y divide-black/5">
         {d.tasks.slice(0, 12).map((t) => (
-          <Link key={t.id} href={`/projects/${t.projectId}`} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/40 transition-colors">
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-[#1C1917] truncate">{t.title}</p>
-              <p className="text-xs text-[#78716C] truncate">
-                {t.projectName || "Bez zakázky"}
-                {t.clientName && ` • ${t.clientName}`}
-              </p>
-              {t.note && <p className="text-[11px] text-[#A8A29E] truncate">{t.note}</p>}
-            </div>
+          <div key={t.id} className="flex items-center gap-2 px-4 py-2.5 hover:bg-white/40 transition-colors">
+            <Link
+              href={t.projectId ? `/projects/${t.projectId}` : "/tasks"}
+              className="flex-1 min-w-0 text-sm text-[#1C1917] truncate"
+            >
+              {t.title}
+            </Link>
             {t.priority > 0 && <PriorityBadge priority={t.priority} />}
             {t.deadline && (
               <span className={cn("text-xs shrink-0", t.overdue ? "text-rose-500" : "text-[#78716C]")}>
                 {format(new Date(t.deadline), "d.M.")}
               </span>
             )}
-          </Link>
+            <button
+              onClick={async () => {
+                await completeTask(t.id);
+                router.refresh();
+              }}
+              title="Označit jako hotové"
+              className="p-1.5 rounded-lg text-emerald-600 hover:bg-emerald-50 transition-colors shrink-0"
+            >
+              <Check className="w-4 h-4" />
+            </button>
+          </div>
         ))}
       </div>
     </Shell>
@@ -375,18 +399,8 @@ export function DashboardGrid({
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-semibold text-[#1C1917]">Dashboard</h1>
-          <p className="text-sm text-[#78716C] mt-0.5">
-            Vítej zpět, {data.userName} • {data.dateStr}
-          </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleReset}
-            title="Obnovit výchozí rozložení"
-            className="p-2 rounded-xl glass text-[#A8A29E] hover:text-[#57534E] hover:bg-white/60 transition-all duration-200"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
           {newProjectSlot}
         </div>
       </div>

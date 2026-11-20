@@ -40,7 +40,7 @@ export function TasksList({
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [quick, setQuick] = useState<"all" | "overdue" | "week">("all");
-  const [view, setView] = useState<"list" | "board">("list");
+  const [view, setView] = useState<"list" | "board">("board");
 
   const now = new Date();
   const q = query.trim().toLowerCase();
@@ -151,28 +151,6 @@ export function TasksList({
               placeholder="Hledat úkol, zakázku, člověka..."
               className="w-64 pl-8 pr-3 py-1.5 rounded-lg border border-white/40 text-sm bg-white/70 focus:outline-none focus:ring-2 focus:ring-[#6366F1]"
             />
-          </div>
-          <div className="flex gap-1.5">
-            {(
-              [
-                ["all", "Všechny"],
-                ["overdue", "Po termínu"],
-                ["week", "Tento týden"],
-              ] as const
-            ).map(([key, label]) => (
-              <button
-                key={key}
-                onClick={() => setQuick(key)}
-                className={cn(
-                  "px-2.5 py-1.5 rounded-lg text-xs border transition-colors",
-                  quick === key
-                    ? "btn-glass-primary text-white border-[#6366F1]"
-                    : "bg-white border-white/40 text-[#78716C] hover:border-[#6366F1]"
-                )}
-              >
-                {label}
-              </button>
-            ))}
           </div>
           <div className="flex gap-1.5 border-l border-black/10 pl-2">
             {(

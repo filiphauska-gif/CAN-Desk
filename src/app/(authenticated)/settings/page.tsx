@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { Settings, Shield, DollarSign, Tag } from "lucide-react";
 import { FontSizeCard } from "../font-size-card";
+import { ResetDashboardCard } from "../reset-dashboard-card";
 
 const roleLabels: Record<string, string> = {
   ADMIN: "Admin",
@@ -37,6 +38,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-6">
+      <ResetDashboardCard />
       <FontSizeCard />
       <div>
         <h1 className="text-xl font-semibold text-[#1C1917]">Nastavení</h1>

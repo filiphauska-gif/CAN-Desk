@@ -145,3 +145,12 @@ export async function getTasksByStatus() {
   });
   return Object.fromEntries(statuses.map((s) => [s.status, s._count.id]));
 }
+
+export async function completeTask(id: string) {
+  const session = await auth();
+  if (!session?.user) throw new Error("Unauthorized");
+  await prisma.task.update({ where: { id }, data: { status: "HOTOVO" } });
+  revalidatePath("/");
+  revalidatePath("/tasks");
+  return { ok: true };
+}

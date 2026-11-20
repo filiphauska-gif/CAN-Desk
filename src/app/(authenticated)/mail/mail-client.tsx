@@ -174,7 +174,6 @@ export function MailClient({
                 </span>
               </div>
               <p className="text-xs text-[#1C1917] truncate mt-0.5">{e.subject}</p>
-              <p className="text-[11px] text-[#A8A29E] truncate">{e.snippet}</p>
               <div className="mt-1">
                 {e.projectLabel ? (
                   <span className="text-[10px] text-[#6366F1] bg-[#6366F1]/10 rounded px-1.5 py-0.5">
