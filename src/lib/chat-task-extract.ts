@@ -102,6 +102,8 @@ export async function extractChatTask(text: string): Promise<ExtractedTask | nul
   const project = await findProject(text);
   let title = text
     .replace(GREETING, "")
+    .replace(/^[A-ZÁ-Ž][a-zá-ž]{2,},\s*/, "")
+    .replace(/^(já\s+|ja\s+)?musím\s+/i, "")
     .replace(FILLER, "")
     .replace(/^do\s+[^,]{0,25}?\d{1,2}\.\s*\d{1,2}\.?\s*(\d{4})?\s*[:,]?\s*/i, "")
     .replace(/máme\s+(udělat|udelat|připravit|pripravit)/i, "$1")

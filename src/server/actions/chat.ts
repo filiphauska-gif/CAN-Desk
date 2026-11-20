@@ -89,11 +89,24 @@ export async function sendChatMessage(roomId: string, body: string) {
         where: { roomId },
         include: { user: { select: { id: true, name: true } } },
       });
-      let targets = members.filter((m) => m.userId !== user.id).map((m) => m.user);
-      const mentioned = targets.filter((t) =>
-        text.toLowerCase().includes(t.name.split(" ")[0].toLowerCase())
+      const others = members.filter((m) => m.userId !== user.id).map((m) => m.user);
+      const sender = members.find((m) => m.userId === user.id)?.user ?? { id: user.id, name: user.name || "Já" };
+      const lower = text.toLowerCase();
+      let targets = others;
+
+      const mentioned = others.filter((t) =>
+        lower.includes(t.name.split(" ")[0].toLowerCase())
       );
+      const selfIntent =
+        /(já|ja)\s+(musím|musim|udělám|udelam|zařídím|zaridim|pošlu|poslu|připravím|pripravim|vytvořím|vytvorim|dodám|dodam|odevzdám|odevzdam)/.test(lower) ||
+        /musím|musim/.test(lower);
+      const weIntent = /máme|mame/.test(lower);
+      const otherIntent = /(udělej|udelej|pošli|posli|připrav|priprav|zařiď|zarid|vytvoř|vytvor|dodej|pošlete|poslete|udělejte|udelejte)/.test(lower);
+
       if (mentioned.length > 0) targets = mentioned;
+      else if (weIntent) targets = [sender, ...others];
+      else if (selfIntent) targets = [sender];
+      else if (otherIntent) targets = others;
       if (targets.length > 0) {
         await prisma.task.create({
           data: {
