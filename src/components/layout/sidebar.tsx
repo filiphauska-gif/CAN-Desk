@@ -46,17 +46,30 @@ export function Sidebar() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   const measurePill = () => {
+    const nav = navRef.current;
+    if (!nav) return;
     const idx = navItems.findIndex((i) => isActive(i.href));
-    const links = navRef.current?.querySelectorAll<HTMLAnchorElement>("a[data-nav]");
+    const links = nav.querySelectorAll<HTMLAnchorElement>("a[data-nav]");
     const el = links?.[idx];
-    if (el) setPill({ top: el.offsetTop, height: el.offsetHeight });
+    if (!el) return;
+    const navRect = nav.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    setPill({
+      top: Math.round(elRect.top - navRect.top + nav.scrollTop),
+      height: Math.round(elRect.height),
+    });
   };
 
   useLayoutEffect(() => {
     measurePill();
     // enable sliding only after the first placement
     const id = requestAnimationFrame(() => setAnimate(true));
-    return () => cancelAnimationFrame(id);
+    // re-measure once fonts/layout settle
+    const t = setTimeout(measurePill, 250);
+    return () => {
+      cancelAnimationFrame(id);
+      clearTimeout(t);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -92,7 +105,7 @@ export function Sidebar() {
                   "absolute left-3 right-3 rounded-xl bg-gradient-to-br from-[#6E70F5] to-[#5B5EE8] shadow-[0_6px_20px_-4px_rgba(99,102,241,0.55),inset_0_1px_1px_rgba(255,255,255,0.3)]",
                   animate && "transition-[transform,height] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
                 )}
-                style={{ transform: `translateY(${pill.top}px)`, height: pill.height }}
+                style={{ top: 0, transform: `translateY(${pill.top}px)`, height: pill.height }}
               />
             )}
 
