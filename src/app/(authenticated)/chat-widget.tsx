@@ -95,7 +95,7 @@ export function ChatWidget({ meId }: { meId: string }) {
       )}
 
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-3rem)] glass-strong rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-3rem)] rounded-2xl bg-white/95 backdrop-blur-xl border border-white/60 shadow-2xl flex flex-col overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-black/5">
             <div className="flex items-center gap-2 min-w-0">
               {other && (
