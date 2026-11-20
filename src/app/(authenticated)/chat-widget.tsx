@@ -28,8 +28,8 @@ export function ChatWidget({ meId }: { meId: string }) {
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    chatUnreadCount().then(setUnread).catch(() => {});
-    const t = setInterval(() => chatUnreadCount().then(setUnread).catch(() => {}), 20000);
+    chatUnreadCount().then((r) => setUnread(r.total)).catch(() => {});
+    const t = setInterval(() => chatUnreadCount().then((r) => setUnread(r.total)).catch(() => {}), 20000);
     return () => clearInterval(t);
   }, []);
 
