@@ -98,10 +98,10 @@ export async function sendChatMessage(roomId: string, body: string) {
         lower.includes(t.name.split(" ")[0].toLowerCase())
       );
       const selfIntent =
-        /(já|ja)\s+(musím|musim|udělám|udelam|zařídím|zaridim|pošlu|poslu|připravím|pripravim|vytvořím|vytvorim|dodám|dodam|odevzdám|odevzdam)/.test(lower) ||
-        /musím|musim/.test(lower);
-      const weIntent = /máme|mame/.test(lower);
-      const otherIntent = /(udělej|udelej|pošli|posli|připrav|priprav|zařiď|zarid|vytvoř|vytvor|dodej|pošlete|poslete|udělejte|udelejte)/.test(lower);
+        /\b(já|ja)\s+(musím|musim|udělám|udelam|zařídím|zaridim|pošlu|poslu|připravím|pripravim|vytvořím|vytvorim|dodám|dodam|odevzdám|odevzdam)\b/.test(lower) ||
+        /\bmusím\b|\bmusim\b/.test(lower);
+      const weIntent = /\bmáme\b|\bmame\b/.test(lower);
+      const otherIntent = /\b(udělej|udelej|pošli|posli|připrav|priprav|zařiď|zarid|vytvoř|vytvor|dodej|pošlete|poslete|udělejte|udelejte)\b/.test(lower);
 
       if (mentioned.length > 0) targets = mentioned;
       else if (weIntent) targets = [sender, ...others];

@@ -106,7 +106,7 @@ export async function extractChatTask(text: string): Promise<ExtractedTask | nul
     .replace(/^(já\s+|ja\s+)?musím\s+/i, "")
     .replace(FILLER, "")
     .replace(/^do\s+[^,]{0,25}?\d{1,2}\.\s*\d{1,2}\.?\s*(\d{4})?\s*[:,]?\s*/i, "")
-    .replace(/máme\s+(udělat|udelat|připravit|pripravit)/i, "$1")
+    .replace(/^(já\s+|ja\s+)?musím\s+/i, "")
     .replace(/\s+/g, " ")
     .trim();
   if (title.length > 120) title = title.slice(0, 117) + "...";
