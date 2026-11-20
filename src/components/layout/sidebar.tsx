@@ -45,7 +45,7 @@ export function Sidebar() {
   return (
     <>
       {/* ---------- Desktop sidebar ---------- */}
-      <div className="hidden lg:block fixed top-0 left-0 bottom-0 w-[16.5rem] p-3">
+      <div className="hidden lg:block w-[16.5rem] shrink-0 sticky top-0 h-screen p-3">
         <div className="flex flex-col h-full glass-strong rounded-2xl overflow-hidden">
           <div className="px-5 py-5 border-b border-black/5">
             <Link href="/" className="flex items-center gap-2.5">
