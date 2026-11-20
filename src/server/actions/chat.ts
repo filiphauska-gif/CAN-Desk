@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { extractChatTask } from "@/lib/chat-task-extract";
 
 async function me() {
   const session = await auth();
@@ -62,6 +63,7 @@ export async function getChatMessages(roomId: string) {
   });
   return messages.map((m) => ({
     id: m.id,
+    kind: m.kind,
     body: m.body,
     authorId: m.authorId,
     authorName: m.author.name,
@@ -74,11 +76,62 @@ export async function sendChatMessage(roomId: string, body: string) {
   await requireMember(roomId, user.id);
   const text = body.trim();
   if (!text) throw new Error("Prázdná zpráva");
-  await prisma.chatMessage.create({
+  const msg = await prisma.chatMessage.create({
     data: { roomId, authorId: user.id, body: text.slice(0, 4000) },
   });
+
+  // automatic task extraction from message text
+  let createdTask: { title: string; deadline: string; assignees: string[] } | null = null;
+  try {
+    const extracted = await extractChatTask(text);
+    if (extracted) {
+      const members = await prisma.chatMember.findMany({
+        where: { roomId },
+        include: { user: { select: { id: true, name: true } } },
+      });
+      let targets = members.filter((m) => m.userId !== user.id).map((m) => m.user);
+      const mentioned = targets.filter((t) =>
+        text.toLowerCase().includes(t.name.split(" ")[0].toLowerCase())
+      );
+      if (mentioned.length > 0) targets = mentioned;
+      if (targets.length > 0) {
+        await prisma.task.create({
+          data: {
+            title: extracted.title,
+            description: `Vytvořeno z chatu.
+[[chat:${msg.id}]]`,
+            status: "OTEVRENO",
+            priority: 0,
+            deadline: extracted.deadline,
+            projectId: extracted.projectId,
+            assignments: { create: targets.map((t) => ({ userId: t.id })) },
+          },
+        });
+        const names = targets.map((t) => t.name).join(", ");
+        const dateLabel = extracted.deadline.toLocaleDateString("cs-CZ", {
+          day: "numeric",
+          month: "numeric",
+        });
+        await prisma.chatMessage.create({
+          data: {
+            roomId,
+            authorId: user.id,
+            kind: "SYSTEM",
+            body: `Úkol vytvořen: ${extracted.title} (do ${dateLabel})${
+              extracted.projectLabel ? ` | ${extracted.projectLabel}` : ""
+            } | pro: ${names}`,
+          },
+        });
+        createdTask = { title: extracted.title, deadline: extracted.deadline.toISOString(), assignees: names.split(", ") };
+      }
+    }
+  } catch {
+    // never block messaging because of extraction
+  }
+
   revalidatePath("/");
-  return { ok: true };
+  revalidatePath("/tasks");
+  return { ok: true, createdTask };
 }
 
 export async function chatUnreadCount() {

@@ -110,10 +110,10 @@ model Project {
   orders          Order[]
   attachments     Attachment[]
   emails          Email[]
+  chatRooms       ChatRoom[]
 
   @@index([clientId])
   @@index([status])
-  chatRooms       ChatRoom[]
 }
 
 model BudgetDocument {
@@ -425,6 +425,7 @@ model ChatRoom {
 
 model ChatMessage {
   id        String   @id @default(cuid())
+  kind      String   @default("USER")
   roomId    String
   room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
   authorId  String
@@ -445,9 +446,3 @@ model ChatMember {
 
   @@unique([roomId, userId])
 }
-
-
-
-
-
-

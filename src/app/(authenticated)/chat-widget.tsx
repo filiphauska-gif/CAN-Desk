@@ -13,7 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 
 type Person = { id: string; name: string; role: string };
-type Msg = { id: string; body: string; authorId: string; authorName: string; createdAt: string };
+type Msg = { id: string; kind?: string; body: string; authorId: string; authorName: string; createdAt: string };
 
 export function ChatWidget({ meId }: { meId: string }) {
   const [open, setOpen] = useState(false);
@@ -147,6 +147,15 @@ export function ChatWidget({ meId }: { meId: string }) {
             <>
               <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
                 {messages.map((m) => {
+                  if (m.kind === "SYSTEM") {
+                    return (
+                      <div key={m.id} className="flex justify-center">
+                        <div className="max-w-[92%] text-center text-[11px] text-[#6366F1] bg-[#6366F1]/10 rounded-lg px-2.5 py-1.5">
+                          {m.body}
+                        </div>
+                      </div>
+                    );
+                  }
                   const mine = m.authorId === meId;
                   return (
                     <div key={m.id} className={cn("flex", mine ? "justify-end" : "justify-start")}>
